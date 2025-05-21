@@ -1,14 +1,23 @@
-package Test5;
+package Test6;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame {
-    TopPanel topPanel = new TopPanel();
-    BottomPanel bottomPanel = new BottomPanel();
+    static BottomPanel bottomPanel = new BottomPanel();
+    static TopPanel topPanel = new TopPanel();
 
     JScrollPane scroll_topPanel = new JScrollPane(topPanel);
     JScrollBar verticalScrollBar = scroll_topPanel.getVerticalScrollBar();
+
+    public static void changeTextInTextField(){
+        String command1 = bottomPanel.getButtonAction();
+        JTextField activeTextField = topPanel.getActiveTextField();
+
+        if(activeTextField!=null){
+            topPanel.setTextField(command1);
+        }
+    }
 
     Window(){
         this.setLayout(new GridLayout(2,1));

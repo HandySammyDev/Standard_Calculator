@@ -1,4 +1,4 @@
-package Test5;
+package Test6;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,22 +18,22 @@ public class TopPanel extends JPanel {
     LinkedList<JTextField> textFieldList = new LinkedList<>();
 
     JTextField activeTF = null;
-    JTextField MTF;
 
-    public void mainTextField(){
-        MTF = new JTextField("1");
+    public void firstTextField(){
+        JTextField MTF = new JTextField("1");
+        MTF.setFont(new Font(null, Font.PLAIN, 25));
+
         TextFieldPanel.setLayout(new GridLayout(0,1));
         TextFieldPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
         TextFieldPanel.add(MTF);
 
         this.add(TextFieldPanel, BorderLayout.SOUTH);
-        textFieldList.add(MTF);
+        textFieldList.add(MTF); //list
 
         MTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==10){
-                    System.out.println("Works!");
                     createTextFields();
                     repaint();
                     revalidate();
@@ -45,7 +45,6 @@ public class TopPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 activeTF = MTF;
-                System.out.println(activeTF.getText());
             }
         });
     }
@@ -53,19 +52,53 @@ public class TopPanel extends JPanel {
     public JTextField getActiveTextField(){
         return activeTF;
     }
-    public void setTextField(JTextField textField, String command){
-        MTF.setText(textField.getText() + command);
+    public void setTextField(String command){
+        activeTF.setText(activeTF.getText() + command);
     }
 
-    JTextField TF;
     int count = 1;
     public void createTextFields(){
         count++;
         expandPanel();
-        TF = new JTextField("" + count);
+        JTextField TF = new JTextField("" + count);
+        TF.setFont(new Font(null, Font.PLAIN, 25));
 
         TextFieldPanel.add(TF);
-        textFieldList.add(TF);
+        textFieldList = modifyLinkedList(textFieldList, TF);
+
+        TF.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                activeTF = TF;
+            }
+        });
+        TF.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==10){
+                    createTextFields();
+                    repaint();
+                    revalidate();
+                }
+            }
+        });
+    }
+
+    public void shiftTextFields(){
+
+    }
+
+    public LinkedList<JTextField> modifyLinkedList(LinkedList<JTextField> originalTextFieldList, JTextField textField){
+        LinkedList<JTextField> newTextFieldList = new LinkedList<>();
+
+        for(int i=0; i<originalTextFieldList.size()+1; i++){
+            if(activeTF==originalTextFieldList.get(i)){
+                newTextFieldList.add(textField); //new TextField
+                continue;
+            }
+            newTextFieldList.add(originalTextFieldList.get(i));
+        }
+        return  newTextFieldList;
     }
 
     public void expandPanel(){
@@ -78,9 +111,10 @@ public class TopPanel extends JPanel {
     }
 
     TopPanel(){
-        this.setBackground(Color.red);
+        this.setBackground(Color.decode("#F2F3F4"));
+        this.setOpaque(true);
         this.setLayout(new BorderLayout());
 
-        mainTextField();
+        firstTextField();
     }
 }

@@ -1,4 +1,4 @@
-package Test5;
+package Test6;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +15,8 @@ public class BottomPanel extends JPanel implements ActionListener{
     public void createNumberButtons(){
         for(int i=0; i<NUM_NUMBER_BUTTONS; i++){
             JButton button = new JButton("" + i);
-            button.addActionListener(this);
             button.setActionCommand("" + i);
-
+            button.addActionListener(this);
             buttonsList[i] = button;
             panel1.add(button);
         }
@@ -28,8 +27,8 @@ public class BottomPanel extends JPanel implements ActionListener{
     public void createExtraButtons(){
         for (String s : extraButtonString) {
             JButton extraButton = new JButton(s);
-            extraButton.addActionListener(this);
             extraButton.setActionCommand(s);
+            extraButton.addActionListener(this);
             panel1.add(extraButton);
         }
     }
@@ -39,8 +38,8 @@ public class BottomPanel extends JPanel implements ActionListener{
     public void createCalcButtons(){
         for(String s : calcButtonString){
             JButton calcButton = new JButton(s);
-            calcButton.addActionListener(this);
             calcButton.setActionCommand(s);
+            calcButton.addActionListener(this);
             calcPanel.add(calcButton);
         }
     }
@@ -63,17 +62,13 @@ public class BottomPanel extends JPanel implements ActionListener{
         createCalcButtons();
     }
 
+    String command;
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.print("Awesome");
-        TopPanel topPanel = new TopPanel();
-
-        String command = e.getActionCommand();
-        JTextField activeTextField = topPanel.getActiveTextField();
-        if(activeTextField != null){
-            topPanel.setTextField(activeTextField, command);
-        }
-        repaint();
-        revalidate();
+        command = e.getActionCommand();
+        Window.changeTextInTextField();
+    }
+    public String getButtonAction(){
+        return command;
     }
 }

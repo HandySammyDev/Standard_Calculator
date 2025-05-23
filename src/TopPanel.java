@@ -28,7 +28,7 @@ public class TopPanel extends JPanel {
         TextFieldPanel.add(MTF);
 
         this.add(TextFieldPanel, BorderLayout.SOUTH);
-        textFieldList.add(MTF); //list
+        textFieldList.add(MTF);
 
         MTF.addKeyListener(new KeyAdapter() {
             @Override
@@ -64,7 +64,7 @@ public class TopPanel extends JPanel {
         TF.setFont(new Font(null, Font.PLAIN, 25));
 
         TextFieldPanel.add(TF);
-        textFieldList = modifyLinkedList(textFieldList, TF);
+        textFieldList = modifyList(textFieldList, activeTF, TF);
 
         TF.addMouseListener(new MouseAdapter() {
             @Override
@@ -88,17 +88,17 @@ public class TopPanel extends JPanel {
 
     }
 
-    public LinkedList<JTextField> modifyLinkedList(LinkedList<JTextField> originalTextFieldList, JTextField textField){
-        LinkedList<JTextField> newTextFieldList = new LinkedList<>();
+    public LinkedList<JTextField> modifyList
+            (LinkedList<JTextField> OriginalList, JTextField textField, JTextField newTextField) {
+        LinkedList<JTextField> newList = new LinkedList<>();
 
-        for(int i=0; i<originalTextFieldList.size()+1; i++){
-            if(activeTF==originalTextFieldList.get(i)){
-                newTextFieldList.add(textField); //new TextField
-                continue;
+        for(int i=0; i<OriginalList.size(); i++){
+            if(textField==OriginalList.get(i)){
+                newList.add(newTextField);
             }
-            newTextFieldList.add(originalTextFieldList.get(i));
+            newList.add(OriginalList.get(i));
         }
-        return  newTextFieldList;
+        return newList;
     }
 
     public void expandPanel(){

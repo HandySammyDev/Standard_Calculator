@@ -1,13 +1,10 @@
-package Test4;
+package Test7;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.LinkedList;
 
 public class TopPanel extends JPanel {
@@ -29,8 +26,10 @@ public class TopPanel extends JPanel {
         activeTF.setText(activeTF.getText() + command);
     }
 
-    int count = 1;
     public void createTextFields(){
+        if(activeCaret==0 && !textFieldList.isEmpty()){
+            return;
+        }
         JTextField TF = new JTextField();
         TF.setFont(new Font(null, Font.PLAIN, 25));
 
@@ -39,14 +38,9 @@ public class TopPanel extends JPanel {
             textFieldList.add(TF);
         }
         else{
-            //FIX ME
-            if(activeTF.getText().trim().isEmpty()){
-                return;
-            }
             expandPanel();
             TextFieldPanel.add(TF);
             textFieldList = modifyList(textFieldList, activeTF, TF);
-            printModifiedList();
         }
 
         TF.addMouseListener(new MouseAdapter() {
@@ -65,14 +59,15 @@ public class TopPanel extends JPanel {
                 }
             }
         });
-        TF.addCaretListener(new CaretListener() {
+        TF.addCaretListener(e -> activeCaret = e.getDot());
+        TF.addFocusListener(new FocusAdapter() {
             @Override
-            public void caretUpdate(CaretEvent e) {
-                activeCaret = e.getDot();
+            public void focusGained(FocusEvent e) {
+                activeTF = (JTextField) e.getSource();
             }
         });
         shiftTextFields();
-        count++;
+        activeCaret = 0;
     }
 
     public void shiftTextFields(){

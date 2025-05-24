@@ -1,6 +1,8 @@
-package Test6;
+package Test4;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -18,36 +20,7 @@ public class TopPanel extends JPanel {
     LinkedList<JTextField> textFieldList = new LinkedList<>();
 
     JTextField activeTF = null;
-
-    public void firstTextField(){
-        JTextField MTF = new JTextField("1");
-        MTF.setFont(new Font(null, Font.PLAIN, 25));
-
-        TextFieldPanel.setLayout(new GridLayout(0,1));
-        TextFieldPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
-        TextFieldPanel.add(MTF);
-
-        this.add(TextFieldPanel, BorderLayout.SOUTH);
-        textFieldList.add(MTF);
-
-        MTF.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode()==10){
-                    createTextFields();
-                    repaint();
-                    revalidate();
-                }
-            }
-        });
-
-        MTF.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                activeTF = MTF;
-            }
-        });
-    }
+    int activeCaret = 0;
 
     public JTextField getActiveTextField(){
         return activeTF;
@@ -58,13 +31,23 @@ public class TopPanel extends JPanel {
 
     int count = 1;
     public void createTextFields(){
-        count++;
-        expandPanel();
-        JTextField TF = new JTextField("" + count);
+        JTextField TF = new JTextField();
         TF.setFont(new Font(null, Font.PLAIN, 25));
 
-        TextFieldPanel.add(TF);
-        textFieldList = modifyList(textFieldList, activeTF, TF);
+        if(textFieldList.isEmpty()){
+            TextFieldPanel.add(TF);
+            textFieldList.add(TF);
+        }
+        else{
+            //FIX ME
+            if(activeTF.getText().trim().isEmpty()){
+                return;
+            }
+            expandPanel();
+            TextFieldPanel.add(TF);
+            textFieldList = modifyList(textFieldList, activeTF, TF);
+            printModifiedList();
+        }
 
         TF.addMouseListener(new MouseAdapter() {
             @Override
@@ -82,10 +65,24 @@ public class TopPanel extends JPanel {
                 }
             }
         });
+        TF.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                activeCaret = e.getDot();
+            }
+        });
+        shiftTextFields();
+        count++;
     }
 
     public void shiftTextFields(){
+        LinkedList<JTextField> modifiedList = new LinkedList<>(textFieldList);
 
+        for(int i=0; i<textFieldList.size(); i++){
+            TextFieldPanel.add(modifiedList.get(i));
+        }
+        repaint();
+        revalidate();
     }
 
     public LinkedList<JTextField> modifyList
@@ -93,12 +90,19 @@ public class TopPanel extends JPanel {
         LinkedList<JTextField> newList = new LinkedList<>();
 
         for(int i=0; i<OriginalList.size(); i++){
+            newList.add(OriginalList.get(i));
             if(textField==OriginalList.get(i)){
                 newList.add(newTextField);
             }
-            newList.add(OriginalList.get(i));
         }
         return newList;
+    }
+
+    public void printModifiedList(){
+        for(int i=0; i<textFieldList.size(); i++){
+            System.out.println(textFieldList.get(i).getText());
+        }
+        System.out.println();
     }
 
     public void expandPanel(){
@@ -114,7 +118,11 @@ public class TopPanel extends JPanel {
         this.setBackground(Color.decode("#F2F3F4"));
         this.setOpaque(true);
         this.setLayout(new BorderLayout());
+        this.add(TextFieldPanel, BorderLayout.SOUTH);
 
-        firstTextField();
+        TextFieldPanel.setLayout(new GridLayout(0,1));
+        TextFieldPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
+
+        createTextFields();
     }
 }

@@ -1,15 +1,14 @@
 package Test7;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class TopPanel extends JPanel {
     final int TF_WIDTH = 500;
-    final int TF_HEIGHT = 100;
+    final int TF_HEIGHT = 50;
     int sizeableTF_HEIGHT = TF_HEIGHT;
 
     JPanel TextFieldPanel = new JPanel();
@@ -40,7 +39,7 @@ public class TopPanel extends JPanel {
         else{
             expandPanel();
             TextFieldPanel.add(TF);
-            textFieldList = modifyList(textFieldList, activeTF, TF);
+            textFieldList = modifyAddList(textFieldList, activeTF, TF);
         }
 
         TF.addMouseListener(new MouseAdapter() {
@@ -57,6 +56,12 @@ public class TopPanel extends JPanel {
                     repaint();
                     revalidate();
                 }
+                if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && textFieldList.size()>1){
+                    shrinkPanel();
+                    textFieldList.remove(activeTF);
+                    changeTextFields();
+                    printModifiedList();
+                }
             }
         });
         TF.addCaretListener(e -> activeCaret = e.getDot());
@@ -66,21 +71,19 @@ public class TopPanel extends JPanel {
                 activeTF = (JTextField) e.getSource();
             }
         });
-        shiftTextFields();
+        changeTextFields();
         activeCaret = 0;
     }
 
-    public void shiftTextFields(){
-        LinkedList<JTextField> modifiedList = new LinkedList<>(textFieldList);
-
+    public void changeTextFields(){
         for(int i=0; i<textFieldList.size(); i++){
-            TextFieldPanel.add(modifiedList.get(i));
+            TextFieldPanel.add(textFieldList.get(i));
         }
         repaint();
         revalidate();
     }
 
-    public LinkedList<JTextField> modifyList
+    public LinkedList<JTextField> modifyAddList
             (LinkedList<JTextField> OriginalList, JTextField textField, JTextField newTextField) {
         LinkedList<JTextField> newList = new LinkedList<>();
 
@@ -93,20 +96,14 @@ public class TopPanel extends JPanel {
         return newList;
     }
 
-    public void printModifiedList(){
-        for(int i=0; i<textFieldList.size(); i++){
-            System.out.println(textFieldList.get(i).getText());
-        }
-        System.out.println();
-    }
-
     public void expandPanel(){
         sizeableTF_HEIGHT += TF_HEIGHT;
         TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }
 
     public void shrinkPanel(){
-
+        sizeableTF_HEIGHT -= TF_HEIGHT;
+        TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }
 
     TopPanel(){
@@ -119,5 +116,12 @@ public class TopPanel extends JPanel {
         TextFieldPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
 
         createTextFields();
+    }
+
+    public void printModifiedList(){
+        for(int i=0; i<textFieldList.size(); i++){
+            System.out.println(textFieldList.get(i).getText());
+        }
+        System.out.println("-------------------------------");
     }
 }

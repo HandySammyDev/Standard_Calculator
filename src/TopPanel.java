@@ -1,10 +1,9 @@
-package Test7;
+package Test5;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
-import java.util.Objects;
 
 public class TopPanel extends JPanel {
     final int TF_WIDTH = 500;
@@ -38,7 +37,6 @@ public class TopPanel extends JPanel {
         }
         else{
             expandPanel();
-            TextFieldPanel.add(TF);
             textFieldList = modifyAddList(textFieldList, activeTF, TF);
         }
 
@@ -53,8 +51,6 @@ public class TopPanel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==10){
                     createTextFields();
-                    repaint();
-                    revalidate();
                 }
                 if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && textFieldList.size()>1){
                     shrinkPanel();
@@ -102,6 +98,9 @@ public class TopPanel extends JPanel {
     }
 
     public void shrinkPanel(){
+        TextFieldPanel.removeAll();
+        repaint();
+        revalidate();
         sizeableTF_HEIGHT -= TF_HEIGHT;
         TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }

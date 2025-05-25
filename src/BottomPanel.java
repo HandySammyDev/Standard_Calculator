@@ -6,60 +6,102 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class BottomPanel extends JPanel implements ActionListener{
-    JPanel panel1 = new JPanel(); //for numbers and extras
+    JPanel CenterButtonsPanel = new JPanel(); //BorderLayout
+    JPanel ButtonsPanel = new JPanel(); //for ALL buttons
+
+    JPanel panel1 = new JPanel();
+    JPanel numberPanel = new JPanel(); //for numbers and extras
+    JPanel usefulCalcPanel = new JPanel(); // for (, ), %, |a|, n
+
+    JPanel panel2 = new JPanel();
     JPanel calcPanel = new JPanel(); //for +, -, *, /
-    static final int NUM_NUMBER_BUTTONS = 10;
 
-    JButton[] buttonsList = new JButton[NUM_NUMBER_BUTTONS];
-
+    int[] numberButtonsList = {1,2,3,4,5,6,7,8,9,0};
     public void createNumberButtons(){
-        for(int i=0; i<NUM_NUMBER_BUTTONS; i++){
-            JButton button = new JButton("" + i);
-            button.setActionCommand("" + i);
+        for (int numberButton : numberButtonsList) {
+            JButton button = new JButton("" + numberButton);
+            button.setActionCommand("" + numberButton);
             button.addActionListener(this);
-            buttonsList[i] = button;
-            panel1.add(button);
+            numberPanel.add(button);
         }
     }
 
-    String[] extraButtonString = {".", "ans"};
-
+    String[] extraButtonsList = {".", "ans"};
     public void createExtraButtons(){
-        for (String s : extraButtonString) {
+        for (String s : extraButtonsList) {
             JButton extraButton = new JButton(s);
             extraButton.setActionCommand(s);
             extraButton.addActionListener(this);
-            panel1.add(extraButton);
+            numberPanel.add(extraButton);
         }
     }
 
-    String[] calcButtonString = {"+","-","*","/"};
-
+    String[] calcButtonList = {"+","-","*","/"};
     public void createCalcButtons(){
-        for(String s : calcButtonString){
+        for(String s : calcButtonList){
             JButton calcButton = new JButton(s);
             calcButton.setActionCommand(s);
             calcButton.addActionListener(this);
             calcPanel.add(calcButton);
         }
     }
-    BottomPanel(){
-        final int HEIGHT = 250; // 500/2
-        final int WIDTH = 400;
 
-        this.setBackground(Color.gray);
-        this.setLayout(new BorderLayout());
+    String[] usefulCalcButtonsList = {"(",")","%","|a|","π"};
+    public void createUsefulCalcButtons(){
+        for (String s : usefulCalcButtonsList) {
+            JButton usefulCalcButton = new JButton(s);
+            usefulCalcButton.setActionCommand(s);
+            usefulCalcButton.addActionListener(this);
+            usefulCalcPanel.add(usefulCalcButton);
+        }
+    }
 
-        panel1.setLayout(new GridLayout(4,3));
-        calcPanel.setLayout(new GridLayout(4,1));
-        calcPanel.setPreferredSize(new Dimension(WIDTH/4, HEIGHT));
-
-        this.add(panel1, BorderLayout.CENTER);
-        this.add(calcPanel, BorderLayout.EAST);
+    public void Panel1_Settings(){
+        panel1.setLayout(new FlowLayout(FlowLayout.LEADING));
+        usefulCalcPanel.setLayout(new GridLayout(5,1));
+        numberPanel.setLayout(new GridLayout(4,3));
 
         createNumberButtons();
         createExtraButtons();
-        createCalcButtons();
+        createUsefulCalcButtons();
+
+        ButtonsPanel.add(panel1);
+        panel1.setLayout(new GridBagLayout());
+
+    }
+
+    BottomPanel(){
+        final int HEIGHT = 250; // 500/2
+        final int WIDTH = 400;
+        final int widthPerButton = 50;
+
+        this.setBackground(Color.gray);
+        this.setLayout(new BorderLayout());
+        CenterButtonsPanel.setLayout(new BorderLayout());
+
+        ButtonsPanel.setLayout(new GridLayout(1,2));
+
+        Panel1_Settings();
+
+        CenterButtonsPanel.add(ButtonsPanel);
+        createBorderSpace();
+        this.add(CenterButtonsPanel, BorderLayout.CENTER);
+    }
+
+    public void createBorderSpace(){
+        int spacing = 10;
+        JPanel borderSpace1 = new JPanel();
+        JPanel borderSpace2 = new JPanel();
+        JPanel borderSpace3 = new JPanel();
+        JPanel borderSpace4 = new JPanel();
+        borderSpace1.setPreferredSize(new Dimension(WIDTH, spacing));
+        borderSpace2.setPreferredSize(new Dimension(WIDTH, spacing));
+        borderSpace3.setPreferredSize(new Dimension(spacing, HEIGHT));
+        borderSpace4.setPreferredSize(new Dimension(spacing, HEIGHT));
+        this.add(borderSpace1, BorderLayout.NORTH);
+        this.add(borderSpace2, BorderLayout.SOUTH);
+        this.add(borderSpace3, BorderLayout.EAST);
+        this.add(borderSpace4, BorderLayout.WEST);
     }
 
     String command;

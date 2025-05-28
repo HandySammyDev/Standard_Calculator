@@ -1,11 +1,11 @@
-package Test6;
+package Test8;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame {
-    static BottomPanel bottomPanel = new BottomPanel();
-    static TopPanel topPanel = new TopPanel();
+    public static BottomPanel bottomPanel = new BottomPanel();
+    public static TopPanel topPanel = new TopPanel();
 
     JScrollPane scroll_topPanel = new JScrollPane(topPanel);
     JScrollBar verticalScrollBar = scroll_topPanel.getVerticalScrollBar();

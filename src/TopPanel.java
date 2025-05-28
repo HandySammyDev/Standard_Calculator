@@ -1,4 +1,6 @@
-package Test5;
+package Test8;
+
+import Test8.Calculations.Basic_Calculations;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +39,7 @@ public class TopPanel extends JPanel {
         }
         else{
             expandPanel();
+            TextFieldPanel.add(TF);
             textFieldList = modifyAddList(textFieldList, activeTF, TF);
         }
 
@@ -51,6 +54,8 @@ public class TopPanel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==10){
                     createTextFields();
+                    repaint();
+                    revalidate();
                 }
                 if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && textFieldList.size()>1){
                     shrinkPanel();
@@ -98,14 +103,11 @@ public class TopPanel extends JPanel {
     }
 
     public void shrinkPanel(){
-        TextFieldPanel.removeAll();
-        repaint();
-        revalidate();
         sizeableTF_HEIGHT -= TF_HEIGHT;
         TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }
 
-    TopPanel(){
+    public TopPanel(){
         this.setBackground(Color.decode("#F2F3F4"));
         this.setOpaque(true);
         this.setLayout(new BorderLayout());

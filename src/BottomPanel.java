@@ -1,4 +1,4 @@
-package Test7;
+package Test8;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package Test6;
+package Test7;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,31 +6,73 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class BottomPanel extends JPanel implements ActionListener{
-    JPanel ButtonsPanel = new JPanel(); //for ALL buttons
-
-    JPanel panel1 = new JPanel();
-    JPanel numberPanel = new JPanel(); //for numbers and extras
-    JPanel FunctionPanel = new JPanel(); // for (, ), %, |a|, n
-
-    JPanel panel2 = new JPanel();
-    JPanel calcPanel = new JPanel(); //for +, -, *, /
-
-    final int HEIGHT = 250; // 500/2
     final int WIDTH = 400;
-    final int widthPerButton = 50;
+    final int HEIGHT = 250;
+    final int WIDTH_PER_CELL = 40;
 
-    int[] numberButtonsList = {1,2,3,4,5,6,7,8,9,0};
-    public void createNumberButtons(){
-        for (int numberButton : numberButtonsList) {
-            JButton button = new JButton("" + numberButton);
-            button.setActionCommand("" + numberButton);
-            button.addActionListener(this);
-            numberPanel.add(button);
+    JPanel MainPanel = new JPanel();
+    GridBagConstraints gbc = new GridBagConstraints();
+    public void mainPanelSettings(){
+        MainPanel.setLayout(new GridBagLayout());
+        MainPanel.setBackground(Color.blue);
+
+        createFunctionButtons();
+        createNumberButtons();
+        createCalcButtons();
+        createCommandButtons();
+
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = .5;
+        MainPanel.add(functionPanel, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = .5;
+        MainPanel.add(numberPanel, gbc);
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = .5;
+        MainPanel.add(calcPanel, gbc);
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.weightx = .5;
+        MainPanel.add(commandPanel, gbc);
+
+        this.add(MainPanel);
+    }
+
+    final int hGap = 4;
+    final int vGap = 4;
+
+    JPanel functionPanel = new JPanel();
+    String[] functionButtonsList =
+            {"mean","π","median","%","mode","|a|","(",")"};
+    public void createFunctionButtons(){
+        functionPanel.setLayout(new GridLayout(4, 2,hGap,vGap));
+        functionPanel.setPreferredSize(new Dimension(WIDTH_PER_CELL*2, HEIGHT));
+
+        for (String s : functionButtonsList) {
+            JButton functionButton = new JButton(s);
+            functionButton.setActionCommand(s);
+            functionButton.addActionListener(this);
+            functionPanel.add(functionButton);
         }
     }
 
+    JPanel numberPanel = new JPanel();
+    int[] numberButtonsList = {1,2,3,4,5,6,7,8,9,0};
     String[] extraButtonsList = {".", "ans"};
-    public void createExtraButtons(){
+    public void createNumberButtons(){
+        numberPanel.setLayout(new GridLayout(4,3,hGap,vGap));
+        functionPanel.setPreferredSize(new Dimension(WIDTH_PER_CELL*3, HEIGHT));
+
+        for (int numberButton : numberButtonsList) {
+            JButton digitButton = new JButton("" + numberButton);
+            digitButton.setActionCommand("" + numberButton);
+            digitButton.addActionListener(this);
+            numberPanel.add(digitButton);
+        }
         for (String s : extraButtonsList) {
             JButton extraButton = new JButton(s);
             extraButton.setActionCommand(s);
@@ -39,8 +81,12 @@ public class BottomPanel extends JPanel implements ActionListener{
         }
     }
 
+    JPanel calcPanel = new JPanel();
     String[] calcButtonList = {"+","-","*","/"};
     public void createCalcButtons(){
+        calcPanel.setLayout(new GridLayout(4,1,hGap,vGap));
+        functionPanel.setPreferredSize(new Dimension(WIDTH_PER_CELL, HEIGHT));
+
         for(String s : calcButtonList){
             JButton calcButton = new JButton(s);
             calcButton.setActionCommand(s);
@@ -49,51 +95,22 @@ public class BottomPanel extends JPanel implements ActionListener{
         }
     }
 
-    String[] functionButtonsList =
-            {"mean","π","median","%","mode","|a|","(",")"};
-    public void createFunctionButtons(){
-        for (String s : functionButtonsList) {
-            JButton usefulCalcButton = new JButton(s);
-            usefulCalcButton.setActionCommand(s);
-            usefulCalcButton.addActionListener(this);
-            FunctionPanel.add(usefulCalcButton);
+    JPanel commandPanel = new JPanel();
+    String[] commandButtonList = {"^", "<", "v", "<", "trash", "delete", "<--|"};
+    public void createCommandButtons(){
+        commandPanel.setLayout(new GridLayout(4,2,hGap,vGap));
+        functionPanel.setPreferredSize(new Dimension(WIDTH_PER_CELL*3, HEIGHT));
+
+        for(String s : commandButtonList){
+            JButton commandButton = new JButton(s);
+            commandButton.setActionCommand(s);
+            commandButton.addActionListener(this);
+            commandPanel.add(commandButton);
         }
     }
 
-    public void Panel1_Settings(){
-        panel1.setLayout(new BorderLayout());
-        panel1.setPreferredSize(new Dimension(WIDTH/2, HEIGHT));
-        panel1.setBackground(Color.red);
-        FunctionPanel.setLayout(new GridLayout(4,2));
-        numberPanel.setLayout(new GridLayout(4,3));
-
-        createNumberButtons();
-        createExtraButtons();
-        createFunctionButtons();
-
-        panel1.add(FunctionPanel, BorderLayout.LINE_START);
-        panel1.add(numberPanel, BorderLayout.LINE_END);
-
-        ButtonsPanel.add(panel1);
-    }
-
-    public void Panel2_Settings(){
-        panel2.setPreferredSize(new Dimension(WIDTH/2, HEIGHT));
-        panel2.setBackground(Color.blue);
-
-        ButtonsPanel.add(panel2);
-    }
-
     BottomPanel(){
-        this.setBackground(Color.gray);
-        this.setLayout(new BorderLayout());
-
-        ButtonsPanel.setLayout(new GridLayout(1,2));
-
-        Panel1_Settings();
-        Panel2_Settings();
-
-        this.add(ButtonsPanel, BorderLayout.CENTER);
+        mainPanelSettings();
     }
 
     String command;

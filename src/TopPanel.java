@@ -16,7 +16,7 @@ public class TopPanel extends JPanel {
 
     LinkedList<JTextField> textFieldList = new LinkedList<>();
 
-    static JTextField activeTF = null;
+    JTextField activeTF = null;
     int activeCaret = 0;
 
     public JTextField getActiveTextField(){
@@ -66,7 +66,7 @@ public class TopPanel extends JPanel {
                     changeTextFields();
                     printModifiedList();
                 }
-                if(e.getKeyCode()==KeyEvent.VK_EQUALS){
+                if(e.getKeyCode()==KeyEvent.VK_E){
                     new Basic_Calculations(getTextInTextField());
                 }
             }

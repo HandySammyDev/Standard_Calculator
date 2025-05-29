@@ -1,19 +1,6 @@
 package Test8.Calculations;
 
-import Test8.TopPanel;
-
-import static Test8.Window.topPanel;
-
 public class Basic_Calculations{
-
-    String text;
-    public void setText(){
-        text = topPanel.getActiveTextField().getText();
-    }
-    public void printText(){
-        System.out.println(text);
-    }
-
     public void adding(){
 
     }
@@ -30,7 +17,7 @@ public class Basic_Calculations{
 
     }
 
-    public Basic_Calculations(){
-        printText();
+    public Basic_Calculations(String text){
+        System.out.println(text);
     }
 }

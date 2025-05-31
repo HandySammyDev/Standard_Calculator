@@ -1,15 +1,17 @@
 package Test8.Calculations;
 
+import java.util.LinkedList;
+
 public class Basic_Calculations{
     private String text;
-    String[] textArr;
+    LinkedList<String> textArr = new LinkedList<>();
 
     double num1;
     double num2;
 
     public double adding(int index){
-        num1 = convertTextToDouble(textArr[index-1]);
-        num2 = convertTextToDouble(textArr[index+1]);
+        num1 = convertTextToDouble(textArr.get(index-1));
+        num2 = convertTextToDouble(textArr.get(index+1));
 
         return num1 + num2;
     }
@@ -28,8 +30,8 @@ public class Basic_Calculations{
 
     public double orderOfOperations(){
         double answer = 0;
-        for(int i=0; i<textArr.length; i++){
-            switch(textArr[i]){
+        for(int i=0; i<textArr.size(); i++){
+            switch(textArr.get(i)){
                 case "+":
                     answer = adding(i);
                     break;
@@ -43,7 +45,7 @@ public class Basic_Calculations{
                     answer = 3;
                     break;
                 default:
-                    answer = 0;
+                    System.out.println("Don't work: " + textArr);
             }
         }
         return answer;
@@ -62,9 +64,8 @@ public class Basic_Calculations{
     public Basic_Calculations(String text){
         this.text = text;
 
-        textArr = new String[text.length()];
-        for(int i=0; i<textArr.length; i++){
-            textArr[i] = Character.toString(text.charAt(i));
+        for(int i=0; i<text.length(); i++){
+            textArr.add(Character.toString(text.charAt(i)));
         }
 
         System.out.println("String: " + text);

@@ -1,4 +1,4 @@
-package Test8.Calculations;
+package Test9.Calculations;
 
 import java.util.LinkedList;
 
@@ -9,11 +9,8 @@ public class Basic_Calculations{
     double num1;
     double num2;
 
-    public double adding(int index){
-        num1 = convertTextToDouble(textArr.get(index-1));
-        num2 = convertTextToDouble(textArr.get(index+1));
+    public void adding(int index){
 
-        return num1 + num2;
     }
     public void subtracting(){
 
@@ -28,27 +25,17 @@ public class Basic_Calculations{
 
     }
 
-    public double orderOfOperations(){
-        double answer = 0;
-        for(int i=0; i<textArr.size(); i++){
-            switch(textArr.get(i)){
-                case "+":
-                    answer = adding(i);
-                    break;
-                case "-":
-                    answer = 1;
-                    break;
-                case "*":
-                    answer = 2;
-                    break;
-                case "/":
-                    answer = 3;
-                    break;
-                default:
-                    System.out.println("Don't work: " + textArr);
+    public void orderOfOperations(){
+        LinkedList<String> orderOfOperationsList = new LinkedList<>();
+
+        for(int i=0; i<text.length(); i++){
+            if(text.charAt(i)=='+'){
+                System.out.println("+");
             }
         }
-        return answer;
+
+        int getFirstSymbol;
+        getFirstSymbol = text.indexOf('+');
     }
 
     public double convertTextToDouble(String text){
@@ -69,7 +56,8 @@ public class Basic_Calculations{
         }
 
         System.out.println("String: " + text);
-        System.out.println("Answer: " + orderOfOperations() + "\n");
+
+        orderOfOperations();
     }
 
     public String getText() {

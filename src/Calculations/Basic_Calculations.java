@@ -27,15 +27,18 @@ public class Basic_Calculations{
 
     public void orderOfOperations(){
         LinkedList<String> orderOfOperationsList = new LinkedList<>();
+        int firstIndex = -1;
+        int second
 
-        for(int i=0; i<text.length(); i++){
-            if(text.charAt(i)=='+'){
-                System.out.println("+");
+        for(int i=0; i<text.length() && firstIndex!=i; i++){
+            if(text.charAt(i)=='*'){
+                firstIndex = i;
+            }
+            if(text.charAt(i)=='/'){
+                firstIndex = i;
             }
         }
-
-        int getFirstSymbol;
-        getFirstSymbol = text.indexOf('+');
+        System.out.print(firstIndex);
     }
 
     public double convertTextToDouble(String text){
@@ -44,7 +47,7 @@ public class Basic_Calculations{
         }
         catch(NumberFormatException e){
             System.out.println(e.getMessage());
-            return 0.00000;
+            return 0;
         }
     }
 

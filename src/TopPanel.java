@@ -1,6 +1,6 @@
-package Test8;
+package Test9;
 
-import Test8.Calculations.Basic_Calculations;
+import Test9.Calculations.Basic_Calculations;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,6 +109,9 @@ public class TopPanel extends JPanel {
     }
 
     public void shrinkPanel(){
+        TextFieldPanel.removeAll();
+        repaint();
+        revalidate();
         sizeableTF_HEIGHT -= TF_HEIGHT;
         TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }

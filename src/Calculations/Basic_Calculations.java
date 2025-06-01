@@ -1,69 +1,91 @@
 package Test9.Calculations;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 
 public class Basic_Calculations{
-    private String text;
-    LinkedList<String> textArr = new LinkedList<>();
+    String text;
 
-    double num1;
-    double num2;
+    String finalAnswer;
 
-    public void adding(int index){
-
+    public double adding(double number1, double number2){
+        return number1 + number2;
     }
-    public void subtracting(){
-
+    public double subtracting(double number1, double number2){
+        return number1 - number2;
     }
-    public void multiplying(){
-
+    public double multiplying(double number1, double number2){
+        return number1 * number2;
     }
-    public void dividing(){
-
+    public double dividing(double number1, double number2){
+        return number1 / number2;
     }
     public void ans(){
 
     }
 
     public void orderOfOperations(){
-        LinkedList<String> orderOfOperationsList = new LinkedList<>();
-        int firstIndex = -1;
-        int second
+        int[] indexArr = new int[3];
+        int count = 0;
+        double number1 = 0;
+        double number2 = 0;
 
-        for(int i=0; i<text.length() && firstIndex!=i; i++){
-            if(text.charAt(i)=='*'){
-                firstIndex = i;
-            }
-            if(text.charAt(i)=='/'){
-                firstIndex = i;
+        for(int i=0; i<text.length(); i++){
+            if(text.charAt(i)=='*' || text.charAt(i)=='/'){
+                indexArr[count] = i;
+                count++;
+                break;
             }
         }
-        System.out.print(firstIndex);
+        for(int i=0; i<text.length(); i++){
+            if(text.charAt(i)=='+' || text.charAt(i)=='-' || text.charAt(i)=='*' || text.charAt(i)=='/'){
+
+            }
+        }
+
+        System.out.println(Arrays.toString(indexArr));
+
+        String string1;
+        String string2;
+
+        if(count==1) {
+            string1 = text.substring(0, indexArr[0]);
+            string2 = text.substring(indexArr[0] + 1);
+            number1 = convertStringToDouble(string1);
+            number2 = convertStringToDouble(string1);
+
+            System.out.println(string1 + string2);
+        }
+
+        switch(text.charAt(indexArr[0])){
+            case '+':
+                System.out.println(adding(number1, number2));
+                break;
+            case '-':
+                System.out.println(subtracting(number1, number2));
+                break;
+            case '*':
+                System.out.println(multiplying(number1, number2));
+                break;
+            case '/':
+                System.out.println(dividing(number1, number2));
+                break;
+        }
     }
 
-    public double convertTextToDouble(String text){
+    public double convertStringToDouble(String string){
         try{
-            return Double.parseDouble(text);
+            return Double.parseDouble(string);
         }
         catch(NumberFormatException e){
             System.out.println(e.getMessage());
-            return 0;
         }
+        return 10101;
     }
 
     public Basic_Calculations(String text){
         this.text = text;
 
-        for(int i=0; i<text.length(); i++){
-            textArr.add(Character.toString(text.charAt(i)));
-        }
-
         System.out.println("String: " + text);
-
         orderOfOperations();
-    }
-
-    public String getText() {
-        return text;
     }
 }

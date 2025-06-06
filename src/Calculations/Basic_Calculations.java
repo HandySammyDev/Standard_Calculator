@@ -1,80 +1,52 @@
 package Test9.Calculations;
 
-import java.util.Arrays;
+import java.util.Stack;
 
 public class Basic_Calculations{
-    String text;
+    String equation;
 
-    String finalAnswer;
+    public void RPN_method(){
+        Stack<Double> numberStack = new Stack<>();
 
-    public void orderOfOperations(){
-        int[] indexArr = new int[3];
-        int count = 0;
-        double number1 = 0;
-        double number2 = 0;
+        String numberString = "";
+        double number = 0.0;
 
-        for(int i=0; i<text.length(); i++){
-            if(text.charAt(i)=='*' || text.charAt(i)=='/'){
-                indexArr[count] = i;
-                count++;
-                break;
+        for(int i=0; i<equation.length(); i++){
+            if(isOperator(equation.charAt(i))){
+                numberString = "";
+                continue;
             }
-        }
-        for(int i=0; i<text.length(); i++){
-            if(!Character.isDigit(text.charAt(i))){
-                indexArr[count] = i;
-                count++;
-                break;
+
+            if(Character.isDigit(equation.charAt(i))){
+                numberString += equation.charAt(i);
+                System.out.println(numberString);
             }
-        }
 
-        System.out.println(Arrays.toString(indexArr));
+            try{
+                number = Double.parseDouble(numberString);
+            }
+            catch(NumberFormatException e){
+                System.out.println("Error");
+                return;
+            }
 
-        String string1;
-        String string2;
-
-        if(count==1) {  //2+2
-            string1 = text.substring(0, indexArr[0]);
-            string2 = text.substring(indexArr[0] + 1);
-            number1 = convertStringToDouble(string1);
-            number2 = convertStringToDouble(string1);
-
-            System.out.println(string1 + string2);
-        }
-        else if(count==2){  //2+2+2
-
-        }
-
-        switch(text.charAt(indexArr[0])){
-            case '+':
-                System.out.println(number1 + number2);
-                break;
-            case '-':
-                System.out.println(number1 - number2);
-                break;
-            case '*':
-                System.out.println(number1 * number2);
-                break;
-            case '/':
-                System.out.println(number1 / number2);
-                break;
+            numberStack.push(number);
         }
     }
 
-    public double convertStringToDouble(String string){
-        try{
-            return Double.parseDouble(string);
+    public boolean isOperator(char operator){
+        switch (operator){
+            case '+', '-', '*', '/':
+                return true;
         }
-        catch(NumberFormatException e){
-            System.out.println(e.getMessage());
-        }
-        return 10101;
+        return false;
     }
 
     public Basic_Calculations(String text){
-        this.text = text;
+        this.equation = text;
+
+        RPN_method();
 
         System.out.println("String: " + text);
-        orderOfOperations();
     }
 }

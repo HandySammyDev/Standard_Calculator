@@ -7,38 +7,31 @@ public class Basic_Calculations{
     String equation;
 
     public void RPN_method(){
-        Stack<Double> numberStack = new Stack<>();
-        String numberString = "";
-        char highestOperator = ' ';
+        Stack<Double> operators = new Stack<>();
+        ArrayList<String> arrRPN = new ArrayList<>();
 
-        double num1;
-        double num2;
+        String numberString;
 
-        for(int i=0; i<equation.length(); i++){
-            if(isOperator(equation.charAt(i))){
-                System.out.println("New number: " + numberString);
-                numberStack.push(convertToDouble(numberString));
-                highestOperator = equation.charAt(i);
+        int i = 0;
+        while(i<equation.length()) {
+            char c = equation.charAt(i);
+            numberString = "";
 
-                numberString = "";
-                continue;
-            }
-
-            if(Character.isDigit(equation.charAt(i))){
+            while(i < equation.length() && Character.isDigit(equation.charAt(i))){
                 numberString += equation.charAt(i);
+                i++;
             }
-        }
-        System.out.println("New number: " + numberString);
-        numberStack.push(convertToDouble(numberString));
-        System.out.println(numberStack);
 
-        //2+3*4
-        if(highestOperator == '*'){
-            num1 = numberStack.pop();
-            num2 = numberStack.pop();
-            numberStack.push(num1 * num2);
+            if(!numberString.isEmpty()){
+                arrRPN.add(numberString);
 
-            System.out.println(num1 * num2);
+                System.out.println(numberString);
+            }
+
+            if(isOperator(c)){
+                // now add the operators in order to the string like 1, 2, 3 *, -
+                i++;
+            }
         }
     }
 

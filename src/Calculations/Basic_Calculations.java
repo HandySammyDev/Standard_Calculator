@@ -7,7 +7,7 @@ public class Basic_Calculations{
     String equation;
 
     public void RPN_method(){
-        Stack<Double> operators = new Stack<>();
+        Stack<String> operators = new Stack<>();
         ArrayList<String> arrRPN = new ArrayList<>();
 
         String numberString;
@@ -24,15 +24,24 @@ public class Basic_Calculations{
 
             if(!numberString.isEmpty()){
                 arrRPN.add(numberString);
-
                 System.out.println(numberString);
             }
 
             if(isOperator(c)){
                 // now add the operators in order to the string like 1, 2, 3 *, -
-                i++;
+                while (!operators.isEmpty() && precedence(operators.peek().charAt(0)) >= precedence(c)) {
+                    arrRPN.add(operators.pop());
+                }
+                operators.push(String.valueOf(c));
+            }
+            i++;
+
+            //Operators never get added so we need to add them in this while loop
+            while(!operators.isEmpty()){
+                arrRPN.add(operators.pop());
             }
         }
+        System.out.println(arrRPN);
     }
 
     public double convertToDouble(String string){
@@ -43,6 +52,16 @@ public class Basic_Calculations{
             System.out.println("Error");
             return -1;
         }
+    }
+
+    public int precedence(char operator){
+        if(operator == '*' || operator == '/'){
+            return 1;
+        }
+        if(operator == '+' || operator == '-'){
+            return 2;
+        }
+        return -1;
     }
 
     public boolean isOperator(char operator){

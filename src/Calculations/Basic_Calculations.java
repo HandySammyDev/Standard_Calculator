@@ -5,8 +5,9 @@ import java.util.Stack;
 
 public class Basic_Calculations{
     String equation;
+    String answer;
 
-    public void RPN_method(){
+    public String RPN_method(){
         Stack<String> operators = new Stack<>();
         ArrayList<String> arrRPN = new ArrayList<>();
 
@@ -42,6 +43,7 @@ public class Basic_Calculations{
             }
         }
         System.out.println(arrRPN);
+        return "Hi";
     }
 
     public double convertToDouble(String string){
@@ -75,8 +77,10 @@ public class Basic_Calculations{
     public Basic_Calculations(String text){
         this.equation = text;
 
-        RPN_method();
-
+        this.answer = "Hello";
         System.out.println("String: " + text);
+    }
+    public String getCalculations(){
+        return answer;
     }
 }

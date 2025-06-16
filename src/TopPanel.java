@@ -1,6 +1,4 @@
-package Test9;
-
-import Test9.Calculations.Basic_Calculations;
+import Calculations.Basic_Calculations;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,15 +7,18 @@ import java.util.LinkedList;
 
 public class TopPanel extends JPanel {
     final int TF_WIDTH = 500;
-    final int TF_HEIGHT = 50;
+    final int TF_HEIGHT = 100;
     int sizeableTF_HEIGHT = TF_HEIGHT;
+    int sizeableLabel_WIDTH = 0;
 
-    JPanel TextFieldPanel = new JPanel();
+    JPanel MainTopPanel = new JPanel();
 
     LinkedList<JTextField> textFieldList = new LinkedList<>();
+    LinkedList<JPanel> jPanelList = new LinkedList<>();
 
     JTextField activeTF = null;
     int activeCaret = 0;
+    JPanel parentPanel;
 
     public JTextField getActiveTextField(){
         return activeTF;
@@ -33,16 +34,27 @@ public class TopPanel extends JPanel {
         if(activeCaret==0 && !textFieldList.isEmpty()){
             return;
         }
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
         JTextField TF = new JTextField();
+        JLabel answerDisplay = new JLabel();
+
         TF.setFont(new Font(null, Font.PLAIN, 25));
 
         if(textFieldList.isEmpty()){
-            TextFieldPanel.add(TF);
+            MainTopPanel.add(panel);
+            panel.add(TF, BorderLayout.CENTER);
+
+            jPanelList.add(panel);
             textFieldList.add(TF);
         }
         else{
             expandPanel();
-            TextFieldPanel.add(TF);
+            MainTopPanel.add(panel);
+            panel.add(TF, BorderLayout.EAST);
+
+            jPanelList = modifyJPanelList(jPanelList, parentPanel, panel);
             textFieldList = modifyAddList(textFieldList, activeTF, TF);
         }
 
@@ -50,6 +62,7 @@ public class TopPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 activeTF = TF;
+                parentPanel = (JPanel) activeTF.getParent();
             }
         });
         TF.addKeyListener(new KeyAdapter() {
@@ -63,11 +76,22 @@ public class TopPanel extends JPanel {
                 if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && textFieldList.size()>1){
                     shrinkPanel();
                     textFieldList.remove(activeTF);
-                    changeTextFields();
+                    changeTextFieldsAndPanel();
                     printModifiedList();
                 }
                 if(e.getKeyCode()==KeyEvent.VK_E){
-                    new Basic_Calculations(getTextInTextField());
+                    if(sizeableLabel_WIDTH <= 200){
+                        sizeableLabel_WIDTH += 50;
+                    }
+                    answerDisplay.setPreferredSize(new Dimension(sizeableLabel_WIDTH, TF_HEIGHT));
+                    repaint();
+                    revalidate();
+
+                    Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
+                    answerDisplay.setText(calculations.getCalculations());
+                    panel.add(answerDisplay);
+                    repaint();
+                    revalidate();
                 }
             }
         });
@@ -76,15 +100,16 @@ public class TopPanel extends JPanel {
             @Override
             public void focusGained(FocusEvent e) {
                 activeTF = (JTextField) e.getSource();
+                parentPanel = (JPanel) activeTF.getParent();
             }
         });
-        changeTextFields();
+        changeTextFieldsAndPanel();
         activeCaret = 0;
     }
 
-    public void changeTextFields(){
+    public void changeTextFieldsAndPanel(){
         for(int i=0; i<textFieldList.size(); i++){
-            TextFieldPanel.add(textFieldList.get(i));
+            jPanelList.get(i).add(textFieldList.get(i));
         }
         repaint();
         revalidate();
@@ -94,10 +119,23 @@ public class TopPanel extends JPanel {
             (LinkedList<JTextField> OriginalList, JTextField textField, JTextField newTextField) {
         LinkedList<JTextField> newList = new LinkedList<>();
 
-        for(int i=0; i<OriginalList.size(); i++){
-            newList.add(OriginalList.get(i));
-            if(textField==OriginalList.get(i)){
+        for (JTextField jTextField : OriginalList) {
+            newList.add(jTextField);
+            if (textField == jTextField) {
                 newList.add(newTextField);
+            }
+        }
+        return newList;
+    }
+
+    public LinkedList<JPanel> modifyJPanelList
+            (LinkedList<JPanel> OriginalList, JPanel jPanel, JPanel newJPanel) {
+        LinkedList<JPanel> newList = new LinkedList<>();
+
+        for (JPanel panel : OriginalList) {
+            newList.add(panel);
+            if (jPanel == panel) {
+                newList.add(newJPanel);
             }
         }
         return newList;
@@ -105,25 +143,25 @@ public class TopPanel extends JPanel {
 
     public void expandPanel(){
         sizeableTF_HEIGHT += TF_HEIGHT;
-        TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
+        MainTopPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }
 
     public void shrinkPanel(){
-        TextFieldPanel.removeAll();
+        MainTopPanel.removeAll();
         repaint();
         revalidate();
         sizeableTF_HEIGHT -= TF_HEIGHT;
-        TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
+        MainTopPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
     }
 
     public TopPanel(){
         this.setBackground(Color.decode("#F2F3F4"));
         this.setOpaque(true);
         this.setLayout(new BorderLayout());
-        this.add(TextFieldPanel, BorderLayout.SOUTH);
+        this.add(MainTopPanel, BorderLayout.SOUTH);
 
-        TextFieldPanel.setLayout(new GridLayout(0,1));
-        TextFieldPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
+        MainTopPanel.setLayout(new GridLayout(0,1));
+        MainTopPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
 
         createTextFields();
     }

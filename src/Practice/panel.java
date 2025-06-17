@@ -6,23 +6,18 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.security.Key;
 import java.util.ArrayList;
 
 public class panel extends JFrame {
     final int WIDTH = 500;
     final int HEIGHT = 50;
-    int sizeableHEIGHT = 0;
+    int sizeableHEIGHT = HEIGHT;
     final int LABEL_WIDTH = 50;
     int sizeableLabelWIDTH = LABEL_WIDTH;
     JPanel topContentPane = new JPanel();
     JPanel bottomContentPane = new JPanel();
     JPanel panelBorderSouth = new JPanel();
-    ArrayList<JPanel> panelList = new ArrayList<>();
-    ArrayList<JTextField> textFieldList = new ArrayList<>();
-    ArrayList<JLabel> labelList = new ArrayList<>();
     JTextField activeField = null;
-
     ArrayList<MixedData> mixedDataArrayList = new ArrayList<>();
 
     int i = 0;
@@ -33,20 +28,25 @@ public class panel extends JFrame {
         label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
 
         panel.setLayout(new BorderLayout());
+        panel.add(textField, BorderLayout.CENTER);
+        panel.add(label, BorderLayout.EAST);
 
-        if(panelList.isEmpty()){
+        if(mixedDataArrayList.isEmpty()){
             panelBorderSouth.add(panel);
-            mixedDataArrayList.add(panel, textField, label);
+            mixedDataArrayList.add(new MixedData(panel, textField, label));
         }
         else{
             expandBorder();
-            panelList = modifiedPanelList(panelList, activeField, panel);
+            mixedDataArrayList = modifiedPanelList(mixedDataArrayList, activeField, panel, textField, label);
         }
 
         textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==10){
+                    createPanels();
+                    repaint();
+                    revalidate();
                     System.out.println("Works");
                 }
             }
@@ -58,15 +58,31 @@ public class panel extends JFrame {
             }
         });
         i++;
+        changeTextFields();
     }
 
-    public ArrayList<JPanel> modifiedPanelList
-            (ArrayList<JPanel> originalList ,JTextField activeTextField, JPanel newPanel){
-        ArrayList<JPanel> newList = new ArrayList<>();
+    public void changeTextFields(){
+        for(int i=0; i<mixedDataArrayList.size(); i++){
+            panelBorderSouth.add(mixedDataArrayList.get(i).getPanel());
+        }
+        repaint();
+        revalidate();
+    }
+
+    public ArrayList<MixedData> modifiedPanelList
+            (ArrayList<MixedData> originalList,
+             JTextField activeTextField,
+             JPanel newPanel,
+             JTextField newTextField,
+             JLabel newLabel){
+
+        ArrayList<MixedData> newList = new ArrayList<>();
+
         for(int i = 0; i<originalList.size(); i++){
             newList.add(originalList.get(i));
-            if(activeTextField==textFieldList.get(i)){
-                newList.add(newPanel);
+
+            if(activeTextField==mixedDataArrayList.get(i).getTextField()){
+                newList.add(new MixedData(newPanel, newTextField, newLabel));
             }
         }
         return newList;

@@ -1,6 +1,5 @@
-package Test9;
-
-import Test9.Calculations.Basic_Calculations;
+import Calculations.Basic_Calculations;
+import Record.MixedData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,130 +7,147 @@ import java.awt.event.*;
 import java.util.LinkedList;
 
 public class TopPanel extends JPanel {
-    final int TF_WIDTH = 500;
-    final int TF_HEIGHT = 50;
-    int sizeableTF_HEIGHT = TF_HEIGHT;
-
-    JPanel TextFieldPanel = new JPanel();
-
-    LinkedList<JTextField> textFieldList = new LinkedList<>();
-
-    JTextField activeTF = null;
+    final int WIDTH = 500;
+    final int HEIGHT = 50;
+    int sizeableHEIGHT = HEIGHT;
+    final int TEXT_FIELD_WIDTH = 450;
+    final int LABEL_WIDTH = 180;
+    int sizeableLabelWIDTH = LABEL_WIDTH;
+    JPanel panelBorderSouth = new JPanel();
+    JTextField activeField = null;
     int activeCaret = 0;
+    LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
 
     public JTextField getActiveTextField(){
-        return activeTF;
+        return activeField;
     }
     public String getTextInTextField(){
-        return activeTF.getText();
+        return activeField.getText();
     }
     public void setTextField(String command){
-        activeTF.setText(activeTF.getText() + command);
+        activeField.setText(activeField.getText() + command);
     }
 
-    public void createTextFields(){
-        if(activeCaret==0 && !textFieldList.isEmpty()){
+    int i=0;
+    public void createPanels(){
+        if(activeCaret==0 && !mixedDataLinkedList.isEmpty()){
             return;
         }
-        JTextField TF = new JTextField();
-        TF.setFont(new Font(null, Font.PLAIN, 25));
 
-        if(textFieldList.isEmpty()){
-            TextFieldPanel.add(TF);
-            textFieldList.add(TF);
+        JPanel panel = new JPanel();
+        JTextField textField = new JTextField("" + i);
+        JLabel label = new JLabel("" + i);
+        textField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, HEIGHT));
+        label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
+
+        panel.setLayout(new BorderLayout());
+        panel.add(textField, BorderLayout.CENTER);
+        panel.add(label, BorderLayout.EAST);
+
+        if(mixedDataLinkedList.isEmpty()){
+            panelBorderSouth.add(panel);
+            mixedDataLinkedList.add(new MixedData(panel, textField, label));
         }
         else{
-            expandPanel();
-            TextFieldPanel.add(TF);
-            textFieldList = modifyAddList(textFieldList, activeTF, TF);
+            expandBorder();
+            mixedDataLinkedList = modifiedPanelList(mixedDataLinkedList, activeField, panel, textField, label);
         }
 
-        TF.addMouseListener(new MouseAdapter() {
+        textField.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                activeTF = TF;
+                activeField = textField;
             }
         });
-        TF.addKeyListener(new KeyAdapter() {
+        textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode()==10){
-                    createTextFields();
+                    createPanels();
+                    repaint();
+                    revalidate();
+                    System.out.println("Works");
+                }
+                if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && mixedDataLinkedList.size()>1){
+                    shrinkPanel();
+                    for(int i = 0; i< mixedDataLinkedList.size(); i++){
+                        if(activeField== mixedDataLinkedList.get(i).getTextField()){
+                            mixedDataLinkedList.remove(i);
+                        }
+                    }
+                    changeTextFields();
+                }
+                if(e.getKeyCode()==KeyEvent.VK_E){
+                    Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
                     repaint();
                     revalidate();
                 }
-                if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && textFieldList.size()>1){
-                    shrinkPanel();
-                    textFieldList.remove(activeTF);
-                    changeTextFields();
-                    printModifiedList();
-                }
-                if(e.getKeyCode()==KeyEvent.VK_E){
-                    new Basic_Calculations(getTextInTextField());
-                }
             }
         });
-        TF.addCaretListener(e -> activeCaret = e.getDot());
-        TF.addFocusListener(new FocusAdapter() {
+        textField.addCaretListener(e -> activeCaret = e.getDot());
+        textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                activeTF = (JTextField) e.getSource();
+                activeField = (JTextField) e.getSource();
             }
         });
         changeTextFields();
         activeCaret = 0;
+        i++;
     }
 
     public void changeTextFields(){
-        for(int i=0; i<textFieldList.size(); i++){
-            TextFieldPanel.add(textFieldList.get(i));
+        for(int i = 0; i< mixedDataLinkedList.size(); i++){
+            panelBorderSouth.add(mixedDataLinkedList.get(i).getPanel());
         }
         repaint();
         revalidate();
     }
 
-    public LinkedList<JTextField> modifyAddList
-            (LinkedList<JTextField> OriginalList, JTextField textField, JTextField newTextField) {
-        LinkedList<JTextField> newList = new LinkedList<>();
+    public LinkedList<MixedData> modifiedPanelList
+            (LinkedList<MixedData> originalList,
+             JTextField activeTextField,
+             JPanel newPanel,
+             JTextField newTextField,
+             JLabel newLabel){
 
-        for(int i=0; i<OriginalList.size(); i++){
-            newList.add(OriginalList.get(i));
-            if(textField==OriginalList.get(i)){
-                newList.add(newTextField);
+        LinkedList<MixedData> newList = new LinkedList<>();
+
+        for(int i = 0; i<originalList.size(); i++){
+            newList.add(originalList.get(i));
+
+            if(activeTextField== mixedDataLinkedList.get(i).getTextField()){
+                newList.add(new MixedData(newPanel, newTextField, newLabel));
             }
         }
         return newList;
     }
 
-    public void expandPanel(){
-        sizeableTF_HEIGHT += TF_HEIGHT;
-        TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
+    public void expandBorder(){
+        sizeableHEIGHT += HEIGHT;
+        panelBorderSouth.setPreferredSize(new Dimension(WIDTH, sizeableHEIGHT));
+        System.out.println(sizeableHEIGHT);
     }
 
     public void shrinkPanel(){
-        TextFieldPanel.removeAll();
+        panelBorderSouth.removeAll();
         repaint();
         revalidate();
-        sizeableTF_HEIGHT -= TF_HEIGHT;
-        TextFieldPanel.setPreferredSize(new Dimension(WIDTH, sizeableTF_HEIGHT));
+        sizeableHEIGHT -= HEIGHT;
+        panelBorderSouth.setPreferredSize(new Dimension(WIDTH, sizeableHEIGHT));
     }
 
     public TopPanel(){
         this.setBackground(Color.decode("#F2F3F4"));
         this.setOpaque(true);
         this.setLayout(new BorderLayout());
-        this.add(TextFieldPanel, BorderLayout.SOUTH);
+        this.add(panelBorderSouth, BorderLayout.SOUTH);
 
-        TextFieldPanel.setLayout(new GridLayout(0,1));
-        TextFieldPanel.setPreferredSize(new Dimension(TF_WIDTH,TF_HEIGHT));
+        panelBorderSouth.setLayout(new GridLayout(0,1));
+        panelBorderSouth.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 
-        createTextFields();
-    }
+        createPanels();
 
-    public void printModifiedList(){
-        for(int i=0; i<textFieldList.size(); i++){
-            System.out.println(textFieldList.get(i).getText());
-        }
-        System.out.println("-------------------------------");
+
     }
 }

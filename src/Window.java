@@ -21,6 +21,7 @@ public class Window extends JFrame {
         this.setLayout(new GridLayout(2,1));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(400,500);
+        this.setResizable(false);
 
         scroll_topPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         verticalScrollBar.setUnitIncrement(20);

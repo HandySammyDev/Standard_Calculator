@@ -10,7 +10,7 @@ public class TopPanel extends JPanel {
     final int WIDTH = 500;
     final int HEIGHT = 50;
     int sizeableHEIGHT = HEIGHT;
-    final int TEXT_FIELD_WIDTH = 450;
+    final int TEXT_FIELD_WIDTH = WIDTH;
     final int LABEL_WIDTH = 180;
     int sizeableLabelWIDTH = LABEL_WIDTH;
     JPanel panelBorderSouth = new JPanel();
@@ -39,6 +39,7 @@ public class TopPanel extends JPanel {
         JLabel label = new JLabel("" + i);
         textField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, HEIGHT));
         label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
+        label.setHorizontalAlignment(SwingConstants.LEFT);
 
         panel.setLayout(new BorderLayout());
         panel.add(textField, BorderLayout.CENTER);
@@ -71,7 +72,7 @@ public class TopPanel extends JPanel {
                 if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && mixedDataLinkedList.size()>1){
                     shrinkPanel();
                     for(int i = 0; i< mixedDataLinkedList.size(); i++){
-                        if(activeField== mixedDataLinkedList.get(i).getTextField()){
+                        if(activeField == mixedDataLinkedList.get(i).getTextField()){
                             mixedDataLinkedList.remove(i);
                         }
                     }
@@ -79,6 +80,11 @@ public class TopPanel extends JPanel {
                 }
                 if(e.getKeyCode()==KeyEvent.VK_E){
                     Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
+                    for(int i=0; i<mixedDataLinkedList.size(); i++){
+                        if(activeField == mixedDataLinkedList.get(i).getTextField()){
+                            mixedDataLinkedList.get(i).getLabel().setText(calculations.getCalculations());
+                        }
+                    }
                     repaint();
                     revalidate();
                 }

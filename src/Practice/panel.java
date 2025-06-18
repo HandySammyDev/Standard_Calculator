@@ -1,29 +1,98 @@
-package Test2.Demo;
+package Practice;
+import Record.MixedData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class panel extends JFrame {
     final int WIDTH = 500;
     final int HEIGHT = 50;
     int sizeableHEIGHT = HEIGHT;
+    final int LABEL_WIDTH = 50;
+    int sizeableLabelWIDTH = LABEL_WIDTH;
     JPanel topContentPane = new JPanel();
     JPanel bottomContentPane = new JPanel();
     JPanel panelBorderSouth = new JPanel();
+    JTextField activeField = null;
+    ArrayList<MixedData> mixedDataArrayList = new ArrayList<>();
 
     int i = 0;
     public void createPanels(){
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1,2));
         JTextField textField = new JTextField("" + i);
         JLabel label = new JLabel("" + i);
+        label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
 
-        panel.add(textField);
-        panel.add(label);
-        panelBorderSouth.add(panel);
+        panel.setLayout(new BorderLayout());
+        panel.add(textField, BorderLayout.CENTER);
+        panel.add(label, BorderLayout.EAST);
 
-        panelBorderSouth.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        if(mixedDataArrayList.isEmpty()){
+            panelBorderSouth.add(panel);
+            mixedDataArrayList.add(new MixedData(panel, textField, label));
+        }
+        else{
+            expandBorder();
+            mixedDataArrayList = modifiedPanelList(mixedDataArrayList, activeField, panel, textField, label);
+        }
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==10){
+                    createPanels();
+                    repaint();
+                    revalidate();
+                    System.out.println("Works");
+                }
+            }
+        });
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                activeField = (JTextField) e.getSource();
+            }
+        });
         i++;
+        changeTextFields();
+    }
+
+    public void changeTextFields(){
+        for(int i=0; i<mixedDataArrayList.size(); i++){
+            panelBorderSouth.add(mixedDataArrayList.get(i).getPanel());
+        }
+        repaint();
+        revalidate();
+    }
+
+    public ArrayList<MixedData> modifiedPanelList
+            (ArrayList<MixedData> originalList,
+             JTextField activeTextField,
+             JPanel newPanel,
+             JTextField newTextField,
+             JLabel newLabel){
+
+        ArrayList<MixedData> newList = new ArrayList<>();
+
+        for(int i = 0; i<originalList.size(); i++){
+            newList.add(originalList.get(i));
+
+            if(activeTextField==mixedDataArrayList.get(i).getTextField()){
+                newList.add(new MixedData(newPanel, newTextField, newLabel));
+            }
+        }
+        return newList;
+    }
+
+    public void expandBorder(){
+        sizeableHEIGHT += HEIGHT;
+        panelBorderSouth.setPreferredSize(new Dimension(WIDTH, sizeableHEIGHT));
+        System.out.println(sizeableHEIGHT);
     }
 
     panel(){
@@ -36,6 +105,7 @@ public class panel extends JFrame {
         this.add(bottomContentPane);
         panelBorderSouth.setLayout(new GridLayout(0,1));
         topContentPane.add(panelBorderSouth, BorderLayout.SOUTH);
+        panelBorderSouth.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         createPanels();
 

@@ -38,7 +38,9 @@ public class TopPanel extends JPanel {
         JTextField textField = new JTextField();
         JLabel label = new JLabel();
         textField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, HEIGHT));
+        textField.setFont(new Font(null, Font.PLAIN, 25));
         label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
+        label.setFont(new Font(null, Font.PLAIN, 25));
         label.setHorizontalAlignment(SwingConstants.LEFT);
 
         panel.setLayout(new BorderLayout());
@@ -108,6 +110,8 @@ public class TopPanel extends JPanel {
                 activeField = (JTextField) e.getSource();
             }
         });
+
+
         changeTextFields();
         activeCaret = 0;
     }

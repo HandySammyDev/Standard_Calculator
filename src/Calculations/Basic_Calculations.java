@@ -1,6 +1,7 @@
 package Calculations;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 
@@ -102,11 +103,23 @@ public class Basic_Calculations{
     }
 
     public Basic_Calculations(String text){
+        for(int i=0; i<text.length(); i++){
+            if(Character.isAlphabetic(text.charAt(i))){
+                answer = "Error";
+                return;
+            }
+        }
         List<String> rpn = RPN_method(text);
-        int result = evaluateRPN(rpn);
 
-        this.answer = Integer.toString(result);
-        System.out.println(result);
+        int result ;
+        try{
+            result = evaluateRPN(rpn);
+            this.answer = Integer.toString(result);
+            System.out.println(result);
+        }
+        catch (EmptyStackException e) {
+            answer = "Error";
+        }
     }
 
     public String getCalculations(){

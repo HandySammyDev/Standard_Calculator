@@ -5,10 +5,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class TopPanel extends JPanel {
     final int WIDTH = 500;
-    final int HEIGHT = 50;
+    final int HEIGHT = 70;
     int sizeableHEIGHT = HEIGHT;
     final int TEXT_FIELD_WIDTH = WIDTH;
     final int LABEL_WIDTH = 180;
@@ -28,15 +29,14 @@ public class TopPanel extends JPanel {
         activeField.setText(activeField.getText() + command);
     }
 
-    int i=0;
     public void createPanels(){
         if(activeCaret==0 && !mixedDataLinkedList.isEmpty()){
             return;
         }
 
         JPanel panel = new JPanel();
-        JTextField textField = new JTextField("" + i);
-        JLabel label = new JLabel("" + i);
+        JTextField textField = new JTextField();
+        JLabel label = new JLabel();
         textField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, HEIGHT));
         label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
         label.setHorizontalAlignment(SwingConstants.LEFT);
@@ -78,11 +78,22 @@ public class TopPanel extends JPanel {
                     }
                     changeTextFields();
                 }
-                if(e.getKeyCode()==KeyEvent.VK_E){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER){
                     Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
                     for(int i=0; i<mixedDataLinkedList.size(); i++){
                         if(activeField == mixedDataLinkedList.get(i).getTextField()){
-                            mixedDataLinkedList.get(i).getLabel().setText(calculations.getCalculations());
+                            mixedDataLinkedList.get(i).getLabel().setIcon(null);
+                            mixedDataLinkedList.get(i).getLabel().setText(null);
+
+                            if(calculations.getCalculations().equals("Error")){
+                                ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/images/error1.png")));
+                                Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_AREA_AVERAGING);
+                                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                                mixedDataLinkedList.get(i).getLabel().setIcon(scaledIcon);
+                            }
+                            else{
+                                mixedDataLinkedList.get(i).getLabel().setText(calculations.getCalculations());
+                            }
                         }
                     }
                     repaint();
@@ -99,7 +110,6 @@ public class TopPanel extends JPanel {
         });
         changeTextFields();
         activeCaret = 0;
-        i++;
     }
 
     public void changeTextFields(){

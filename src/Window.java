@@ -21,8 +21,11 @@ public class Window extends JFrame {
         this.setLayout(new GridLayout(2,1));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(400,500);
-        this.setResizable(false);
+        this.setResizable(true);
+        this.setTitle("Standard Calculator");
 
+        scroll_topPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#1d2226"), 3));
+        scroll_topPanel.setViewportBorder(null);
         scroll_topPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         verticalScrollBar.setUnitIncrement(20);
         this.add(scroll_topPanel); //This is TopPanel

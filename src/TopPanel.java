@@ -2,6 +2,7 @@ import Calculations.Basic_Calculations;
 import Record.MixedData;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
@@ -37,12 +38,18 @@ public class TopPanel extends JPanel {
         JPanel panel = new JPanel();
         JTextField textField = new JTextField();
         JLabel label = new JLabel();
+
         textField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, HEIGHT));
         textField.setFont(new Font(null, Font.PLAIN, 25));
+        textField.setBackground(Color.decode("#f0edec"));
+        textField.setBorder(null);
+
         label.setPreferredSize(new Dimension(LABEL_WIDTH, HEIGHT));
         label.setFont(new Font(null, Font.PLAIN, 25));
         label.setHorizontalAlignment(SwingConstants.LEFT);
+        label.setBackground(Color.decode("#f0edec"));
 
+        panel.setBorder(new LineBorder(Color.decode("#1d2226")));
         panel.setLayout(new BorderLayout());
         panel.add(textField, BorderLayout.CENTER);
         panel.add(label, BorderLayout.EAST);
@@ -111,7 +118,6 @@ public class TopPanel extends JPanel {
             }
         });
 
-
         changeTextFields();
         activeCaret = 0;
     }
@@ -158,7 +164,7 @@ public class TopPanel extends JPanel {
     }
 
     public TopPanel(){
-        this.setBackground(Color.decode("#F2F3F4"));
+        this.setBackground(Color.decode("#31383d"));
         this.setOpaque(true);
         this.setLayout(new BorderLayout());
         this.add(panelBorderSouth, BorderLayout.SOUTH);
@@ -167,7 +173,5 @@ public class TopPanel extends JPanel {
         panelBorderSouth.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 
         createPanels();
-
-
     }
 }

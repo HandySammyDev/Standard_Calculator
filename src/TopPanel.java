@@ -3,6 +3,8 @@ import Record.MixedData;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
@@ -93,13 +95,23 @@ public class TopPanel extends JPanel {
                     }
                     changeTextFields();
                 }
+            }
+        });
 
-                char c = e.getKeyChar();
-                if(Character.isLetterOrDigit(c)){
-                    changeLabel();
-                    repaint();
-                    revalidate();
-                }
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changeLabel();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changeLabel();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                changeLabel();
             }
         });
 
@@ -147,13 +159,12 @@ public class TopPanel extends JPanel {
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(activeField == mixedDataLinkedList.get(i).getTextField()){
                 Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
-
                 ans = calculations.getCalculations();
 
                 mixedDataLinkedList.get(i).getLabel().setIcon(null);
                 mixedDataLinkedList.get(i).getLabel().setText(null);
 
-                if(calculations.getCalculations().equals("Error")){
+                if(ans.equals("Error")){
                     ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/images/error1.png")));
                     Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_AREA_AVERAGING);
                     ImageIcon scaledIcon = new ImageIcon(scaledImage);
@@ -161,7 +172,7 @@ public class TopPanel extends JPanel {
                     mixedDataLinkedList.get(i).getLabel().setIcon(scaledIcon);
                 }
                 else{
-                    mixedDataLinkedList.get(i).getLabel().setText(calculations.getCalculations());
+                    mixedDataLinkedList.get(i).getLabel().setText(ans);
                 }
             }
         }

@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.Stack;
 
 public class TopPanel extends JPanel {
     final int WIDTH = 500;
@@ -19,6 +21,7 @@ public class TopPanel extends JPanel {
     JTextField activeField = null;
     int activeCaret = 0;
     LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
+    String ans = null;
 
     public JTextField getActiveTextField(){
         return activeField;
@@ -28,6 +31,9 @@ public class TopPanel extends JPanel {
     }
     public void setTextField(String command){
         activeField.setText(activeField.getText() + command);
+    }
+    public String getAns(){
+        return ans;
     }
 
     public void createPanels(){
@@ -69,6 +75,7 @@ public class TopPanel extends JPanel {
                 activeField = textField;
             }
         });
+
         textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -76,10 +83,9 @@ public class TopPanel extends JPanel {
                     createPanels();
                     repaint();
                     revalidate();
-                    System.out.println("Works");
                 }
                 if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && mixedDataLinkedList.size()>1){
-                    shrinkPanel();
+                    shrinkBorder();
                     for(int i = 0; i< mixedDataLinkedList.size(); i++){
                         if(activeField == mixedDataLinkedList.get(i).getTextField()){
                             mixedDataLinkedList.remove(i);
@@ -87,30 +93,18 @@ public class TopPanel extends JPanel {
                     }
                     changeTextFields();
                 }
-                if(e.getKeyCode()==KeyEvent.VK_ENTER){
-                    Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
-                    for(int i=0; i<mixedDataLinkedList.size(); i++){
-                        if(activeField == mixedDataLinkedList.get(i).getTextField()){
-                            mixedDataLinkedList.get(i).getLabel().setIcon(null);
-                            mixedDataLinkedList.get(i).getLabel().setText(null);
 
-                            if(calculations.getCalculations().equals("Error")){
-                                ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/images/error1.png")));
-                                Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_AREA_AVERAGING);
-                                ImageIcon scaledIcon = new ImageIcon(scaledImage);
-                                mixedDataLinkedList.get(i).getLabel().setIcon(scaledIcon);
-                            }
-                            else{
-                                mixedDataLinkedList.get(i).getLabel().setText(calculations.getCalculations());
-                            }
-                        }
-                    }
+                char c = e.getKeyChar();
+                if(Character.isLetterOrDigit(c)){
+                    changeLabel();
                     repaint();
                     revalidate();
                 }
             }
         });
+
         textField.addCaretListener(e -> activeCaret = e.getDot());
+
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -149,13 +143,39 @@ public class TopPanel extends JPanel {
         return newList;
     }
 
+    public void changeLabel(){
+        for(int i=0; i<mixedDataLinkedList.size(); i++){
+            if(activeField == mixedDataLinkedList.get(i).getTextField()){
+                Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
+
+                ans = calculations.getCalculations();
+
+                mixedDataLinkedList.get(i).getLabel().setIcon(null);
+                mixedDataLinkedList.get(i).getLabel().setText(null);
+
+                if(calculations.getCalculations().equals("Error")){
+                    ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/images/error1.png")));
+                    Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_AREA_AVERAGING);
+                    ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+                    mixedDataLinkedList.get(i).getLabel().setIcon(scaledIcon);
+                }
+                else{
+                    mixedDataLinkedList.get(i).getLabel().setText(calculations.getCalculations());
+                }
+            }
+        }
+        repaint();
+        revalidate();
+    }
+
     public void expandBorder(){
         sizeableHEIGHT += HEIGHT;
         panelBorderSouth.setPreferredSize(new Dimension(WIDTH, sizeableHEIGHT));
         System.out.println(sizeableHEIGHT);
     }
 
-    public void shrinkPanel(){
+    public void shrinkBorder(){
         panelBorderSouth.removeAll();
         repaint();
         revalidate();

@@ -5,19 +5,10 @@ public class Window extends JFrame {
     public static BottomPanel bottomPanel = new BottomPanel();
     public static TopPanel topPanel = new TopPanel();
 
-    JScrollPane scroll_topPanel = new JScrollPane(topPanel);
-    JScrollBar verticalScrollBar = scroll_topPanel.getVerticalScrollBar();
-
-    public static void changeTextInTextField(){
-        String command1 = bottomPanel.getButtonAction();
-        JTextField activeTextField = topPanel.getActiveTextField();
-
-        if(activeTextField!=null){
-            topPanel.setTextField(command1);
-        }
-    }
-
     Window(){
+        JScrollPane scroll_topPanel = new JScrollPane(topPanel);
+        JScrollBar verticalScrollBar = scroll_topPanel.getVerticalScrollBar();
+
         this.setLayout(new GridLayout(2,1));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(400,500);
@@ -33,5 +24,29 @@ public class Window extends JFrame {
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    public static void changeTextInTextField(String command){
+        JTextField activeTextField = topPanel.getActiveTextField();
+        if(command.equals("<--|") || command.equals("ans")){
+            command = "";
+        }
+        if(activeTextField!=null){
+            topPanel.setTextField(command);
+        }
+    }
+
+    public static void isEnterPressed(String command){
+        if(command.equals("<--|")){
+            topPanel.createPanels();
+        }
+    }
+
+    public static void isAnsPressed(String command){
+        if(command.equals("ans")){
+            if(topPanel.getAns()!=null){
+                changeTextInTextField(topPanel.getAns());
+            }
+        }
     }
 }

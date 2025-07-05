@@ -1,4 +1,4 @@
-import CustomButtonDesign.GradientButton;
+import CustomComponents.GradientButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,13 +59,12 @@ public class BottomPanel extends JPanel implements ActionListener{
         createButtons();
     }
 
-    String command;
     @Override
     public void actionPerformed(ActionEvent e) {
-        command = e.getActionCommand();
-        Window.changeTextInTextField();
-    }
-    public String getButtonAction(){
-        return command;
+        String command = e.getActionCommand();
+
+        Window.changeTextInTextField(command);
+        Window.isEnterPressed(command);
+        Window.isAnsPressed(command);
     }
 }

@@ -66,5 +66,6 @@ public class BottomPanel extends JPanel implements ActionListener{
         Window.changeTextInTextField(command);
         Window.isEnterPressed(command);
         Window.isAnsPressed(command);
+        Window.isClearPressed(command);
     }
 }

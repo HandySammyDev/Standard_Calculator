@@ -171,6 +171,9 @@ public class TopPanel extends JPanel {
 
                     mixedDataLinkedList.get(i).getLabel().setIcon(scaledIcon);
                 }
+                else if (getActiveTextField().getText().isEmpty()) {
+                    mixedDataLinkedList.get(i).getLabel().setText(null);
+                }
                 else{
                     mixedDataLinkedList.get(i).getLabel().setText(ans);
                 }
@@ -178,6 +181,10 @@ public class TopPanel extends JPanel {
         }
         repaint();
         revalidate();
+    }
+
+    public void clearTextField(){
+        getActiveTextField().setText("");
     }
 
     public void expandBorder(){

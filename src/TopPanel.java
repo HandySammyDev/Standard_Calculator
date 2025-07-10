@@ -9,8 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TopPanel extends JPanel {
     final int WIDTH = 500;
@@ -24,6 +24,7 @@ public class TopPanel extends JPanel {
     int activeCaret = 0;
     LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
     String ans = null;
+    MixedData[] mixedDataArr = new MixedData[10];
 
     public JTextField getActiveTextField(){
         return activeField;
@@ -75,6 +76,8 @@ public class TopPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 activeField = textField;
+                clearHighlightActiveTextField();
+                highlightActiveTextField();
             }
         });
 
@@ -165,14 +168,11 @@ public class TopPanel extends JPanel {
                 mixedDataLinkedList.get(i).getLabel().setText(null);
 
                 if(ans.equals("Error")){
-                    ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/images/error1.png")));
-                    Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_AREA_AVERAGING);
-                    ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
-                    mixedDataLinkedList.get(i).getLabel().setIcon(scaledIcon);
-                }
-                else if (getActiveTextField().getText().isEmpty()) {
-                    mixedDataLinkedList.get(i).getLabel().setText(null);
+                    while(count){
+
+                    }
+                    mixedDataLinkedList.get(i).getLabel().setIcon(errorImage());
                 }
                 else{
                     mixedDataLinkedList.get(i).getLabel().setText(ans);
@@ -185,6 +185,46 @@ public class TopPanel extends JPanel {
 
     public void clearTextField(){
         getActiveTextField().setText("");
+    }
+
+    int mixedDataTemp;
+    public void highlightActiveTextField(){
+        for(int i=0; i<mixedDataLinkedList.size(); i++){
+            if(mixedDataLinkedList.get(i).getTextField()==activeField){
+                mixedDataLinkedList.get(i).getPanel().setBorder(new LineBorder(Color.decode("#1e8d8f"), 4));
+                mixedDataTemp = i;
+            }
+        }
+    }
+
+    public void clearHighlightActiveTextField(){
+        mixedDataLinkedList.get(mixedDataTemp).getPanel().setBorder(new LineBorder(Color.decode("#1d2226")));
+    }
+
+    int count = 2;
+    public int errorImageDelay(){
+        count = 2;
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                count--;
+                if(count<0){
+                    timer.cancel();
+                }
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 1000);
+        return count;
+    }
+
+    public ImageIcon errorImage(){
+        ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/images/error1.png")));
+        Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_AREA_AVERAGING);
+
+        return new ImageIcon(scaledImage);
     }
 
     public void expandBorder(){

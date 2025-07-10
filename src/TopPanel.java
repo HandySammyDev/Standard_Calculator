@@ -168,11 +168,8 @@ public class TopPanel extends JPanel {
                 mixedDataLinkedList.get(i).getLabel().setText(null);
 
                 if(ans.equals("Error")){
-
-                    while(count){
-
-                    }
-                    mixedDataLinkedList.get(i).getLabel().setIcon(errorImage());
+                    errorIndex = i;
+                    errorImageDelay();
                 }
                 else{
                     mixedDataLinkedList.get(i).getLabel().setText(ans);
@@ -183,11 +180,29 @@ public class TopPanel extends JPanel {
         revalidate();
     }
 
+    private int errorIndex;
+    public void errorImageDelay(){
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            int count = 1;
+            @Override
+            public void run() {
+                count--;
+                if(count<0){
+                    timer.cancel();
+                    mixedDataLinkedList.get(errorIndex).getLabel().setIcon(errorImage());
+                }
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 750);
+    }
+
     public void clearTextField(){
         getActiveTextField().setText("");
     }
 
-    int mixedDataTemp;
+    private int mixedDataTemp;
     public void highlightActiveTextField(){
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(mixedDataLinkedList.get(i).getTextField()==activeField){
@@ -199,25 +214,6 @@ public class TopPanel extends JPanel {
 
     public void clearHighlightActiveTextField(){
         mixedDataLinkedList.get(mixedDataTemp).getPanel().setBorder(new LineBorder(Color.decode("#1d2226")));
-    }
-
-    int count = 2;
-    public int errorImageDelay(){
-        count = 2;
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                count--;
-                if(count<0){
-                    timer.cancel();
-                }
-            }
-        };
-
-        timer.scheduleAtFixedRate(task, 0, 1000);
-        return count;
     }
 
     public ImageIcon errorImage(){

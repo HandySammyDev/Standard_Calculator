@@ -104,16 +104,19 @@ public class TopPanel extends JPanel {
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
+                clearError();
                 changeLabel();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
+                clearError();
                 changeLabel();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
+                clearError();
                 changeLabel();
             }
         });
@@ -161,6 +164,8 @@ public class TopPanel extends JPanel {
     public void changeLabel(){
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(activeField == mixedDataLinkedList.get(i).getTextField()){
+                errorIndex = i;
+
                 Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
                 ans = calculations.getCalculations();
 
@@ -168,8 +173,10 @@ public class TopPanel extends JPanel {
                 mixedDataLinkedList.get(i).getLabel().setText(null);
 
                 if(ans.equals("Error")){
-                    errorIndex = i;
                     errorImageDelay();
+                }
+                else if(ans.isEmpty()){
+                    mixedDataLinkedList.get(i).getLabel().setText("");
                 }
                 else{
                     mixedDataLinkedList.get(i).getLabel().setText(ans);
@@ -180,22 +187,34 @@ public class TopPanel extends JPanel {
         revalidate();
     }
 
+    private Timer errorTimer;
     private int errorIndex;
-    public void errorImageDelay(){
-        Timer timer = new Timer();
+    public void errorImageDelay() {
+        if(errorTimer!=null){
+            errorTimer.cancel(); //cancel previous timer if still running
+        }
+
+        errorTimer = new Timer();
         TimerTask task = new TimerTask() {
             int count = 1;
             @Override
             public void run() {
                 count--;
                 if(count<0){
-                    timer.cancel();
+                    errorTimer.cancel();
                     mixedDataLinkedList.get(errorIndex).getLabel().setIcon(errorImage());
                 }
             }
         };
 
-        timer.scheduleAtFixedRate(task, 0, 750);
+        errorTimer.scheduleAtFixedRate(task, 0, 750);
+    }
+    public void clearError(){
+        if(errorTimer!=null){
+            errorTimer.cancel();
+        }
+        mixedDataLinkedList.get(errorIndex).getLabel().setIcon(null);
+        mixedDataLinkedList.get(errorIndex).getLabel().setText(null);
     }
 
     public void clearTextField(){

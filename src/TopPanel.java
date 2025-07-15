@@ -13,18 +13,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TopPanel extends JPanel {
-    final int WIDTH = 500;
-    final int HEIGHT = 70;
-    int sizeableHEIGHT = HEIGHT;
-    final int TEXT_FIELD_WIDTH = WIDTH;
-    final int LABEL_WIDTH = 180;
-    int sizeableLabelWIDTH = LABEL_WIDTH;
-    JPanel panelBorderSouth = new JPanel();
-    JTextField activeField = null;
-    int activeCaret = 0;
-    LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
-    String ans = null;
-    MixedData[] mixedDataArr = new MixedData[10];
+    private final int WIDTH = 500;
+    private final int HEIGHT = 70;
+    private int sizeableHEIGHT = HEIGHT;
+    private final int TEXT_FIELD_WIDTH = WIDTH;
+    private final int LABEL_WIDTH = 180;
+    private int sizeableLabelWIDTH = LABEL_WIDTH;
+    private JPanel panelBorderSouth = new JPanel();
+    private JTextField activeField = null;
+    private int activeCaret = 0;
+    private LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
+    private String ans = null;
+    //MixedData[] mixedDataArr = new MixedData[10];
 
     public JTextField getActiveTextField(){
         return activeField;
@@ -104,19 +104,16 @@ public class TopPanel extends JPanel {
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                clearError();
                 changeLabel();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                clearError();
                 changeLabel();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                clearError();
                 changeLabel();
             }
         });
@@ -164,19 +161,19 @@ public class TopPanel extends JPanel {
     public void changeLabel(){
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(activeField == mixedDataLinkedList.get(i).getTextField()){
-                errorIndex = i;
-
                 Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
+
+                errorIndex = i;
                 ans = calculations.getCalculations();
 
-                mixedDataLinkedList.get(i).getLabel().setIcon(null);
-                mixedDataLinkedList.get(i).getLabel().setText(null);
+                clearError();
 
                 if(ans.equals("Error")){
+                    if(getTextInTextField().isEmpty()){
+                        mixedDataLinkedList.get(i).getLabel().setText(null);
+                        break;
+                    }
                     errorImageDelay();
-                }
-                else if(ans.isEmpty()){
-                    mixedDataLinkedList.get(i).getLabel().setText("");
                 }
                 else{
                     mixedDataLinkedList.get(i).getLabel().setText(ans);
@@ -219,6 +216,12 @@ public class TopPanel extends JPanel {
 
     public void clearTextField(){
         getActiveTextField().setText("");
+    }
+    public void clearAllTextFields(){
+        panelBorderSouth.removeAll();
+        createPanels();
+        repaint();
+        revalidate();
     }
 
     private int mixedDataTemp;

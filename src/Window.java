@@ -53,6 +53,14 @@ public class Window extends JFrame {
     public static void isClearPressed(String command){
         if(command.equals("clear")){
             topPanel.clearTextField();
+            System.out.println("clear");
+        }
+    }
+
+    public static void isClearAllPressed(String command){
+        if(command.equals("CE")){
+            topPanel.clearAllTextFields();
+            System.out.println("CE!!");
         }
     }
 }

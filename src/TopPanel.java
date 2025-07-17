@@ -21,6 +21,7 @@ public class TopPanel extends JPanel {
     private int sizeableLabelWIDTH = LABEL_WIDTH;
     private JPanel panelBorderSouth = new JPanel();
     private JTextField activeField = null;
+    private int textFieldIndex;
     private int activeCaret = 0;
     private LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
     private String ans = null;
@@ -66,6 +67,8 @@ public class TopPanel extends JPanel {
         if(mixedDataLinkedList.isEmpty()){
             panelBorderSouth.add(panel);
             mixedDataLinkedList.add(new MixedData(panel, textField, label));
+            activeField = mixedDataLinkedList.getFirst().getTextField();
+            highlightActiveTextField(getTextFieldIndex());
         }
         else{
             expandBorder();
@@ -77,7 +80,7 @@ public class TopPanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 activeField = textField;
                 clearHighlightActiveTextField();
-                highlightActiveTextField();
+                highlightActiveTextField(getTextFieldIndex());
             }
         });
 
@@ -131,6 +134,15 @@ public class TopPanel extends JPanel {
         activeCaret = 0;
     }
 
+    public int setTextFieldIndex(){
+        for(int i=0; i<mixedDataLinkedList.size(); i++){
+            if(mixedDataLinkedList.get(i).getTextField()==activeField){
+                return i;
+            }
+        }
+        return 0;
+    }
+
     public void changeTextFields(){
         for(int i = 0; i< mixedDataLinkedList.size(); i++){
             panelBorderSouth.add(mixedDataLinkedList.get(i).getPanel());
@@ -159,25 +171,23 @@ public class TopPanel extends JPanel {
     }
 
     public void changeLabel(){
-        for(int i=0; i<mixedDataLinkedList.size(); i++){
-            if(activeField == mixedDataLinkedList.get(i).getTextField()){
-                Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
+        if(activeField == mixedDataLinkedList.get(textFieldIndex).getTextField()){
+            Basic_Calculations calculations = new Basic_Calculations(getTextInTextField());
 
-                errorIndex = i;
-                ans = calculations.getCalculations();
+            errorIndex = textFieldIndex;
+            ans = calculations.getCalculations();
 
-                clearError();
+            clearError();
 
-                if(ans.equals("Error")){
-                    if(getTextInTextField().isEmpty()){
-                        mixedDataLinkedList.get(i).getLabel().setText(null);
-                        break;
-                    }
-                    errorImageDelay();
+            if(ans.equals("Error")){
+                if(getTextInTextField().isEmpty()){
+                    mixedDataLinkedList.get(textFieldIndex).getLabel().setText(null);
+                    return;
                 }
-                else{
-                    mixedDataLinkedList.get(i).getLabel().setText(ans);
-                }
+                errorImageDelay();
+            }
+            else{
+                mixedDataLinkedList.get(textFieldIndex).getLabel().setText(ans);
             }
         }
         repaint();
@@ -219,13 +229,20 @@ public class TopPanel extends JPanel {
     }
     public void clearAllTextFields(){
         panelBorderSouth.removeAll();
-        createPanels();
+        panelBorderSouth.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         repaint();
         revalidate();
+        createPanels();
+    }
+    public boolean isClearFunction(){
+        if(activeCaret==0 && !mixedDataLinkedList.isEmpty()){
+            return false;
+        }
+        return false;
     }
 
     private int mixedDataTemp;
-    public void highlightActiveTextField(){
+    public void highlightActiveTextField(int textFieldIndex){
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(mixedDataLinkedList.get(i).getTextField()==activeField){
                 mixedDataLinkedList.get(i).getPanel().setBorder(new LineBorder(Color.decode("#1e8d8f"), 4));

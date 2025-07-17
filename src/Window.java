@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.PreparedStatement;
 
 public class Window extends JFrame {
     public static BottomPanel bottomPanel = new BottomPanel();

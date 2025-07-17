@@ -1,4 +1,4 @@
-import CustomButtonDesign.GradientButton;
+import CustomComponents.GradientButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,17 +48,19 @@ public class BottomPanel extends JPanel implements ActionListener{
                     colorHover1, colorHover2,
                     colorPressed1, colorPressed2);
 
-//            if(s.equals("clear")){
-//                button.addActionListener(e -> {
-//                    String current = button.getText();
-//                    if(current.equals("clear")){
-//                        button.setText("CE");
-//                    }
-//                    else {
-//                        button.setText("clear");
-//                    }
-//                });
-//            }
+            if(s.equals("clear")){
+                button.addActionListener(e -> {
+                    String current = button.getText();
+                    if(current.equals("clear")){
+                        button.setText("CE");
+                        button.setActionCommand("CE");
+                    }
+                    else {
+                        button.setText("clear");
+                        button.setActionCommand("clear");
+                    }
+                });
+            }
             button.addActionListener(this);
             button.setActionCommand(s);
             this.add(button);
@@ -73,35 +75,14 @@ public class BottomPanel extends JPanel implements ActionListener{
         createButtons();
     }
 
-    private final int indexOfClearButton = 22;
-    JButton clearButton = buttonsArr[indexOfClearButton];
-
-    public String getClearButtonText(){
-        return buttonsArr[indexOfClearButton].getText();
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        if(command.equals("clear")){
-            System.out.println("Clear");
-            Window.isClearPressed(command);
-            clearButton.setActionCommand("CE");
-            clearButton.setText("CE");
-            repaint();
-        }
-        else if(command.equals("CE")){
-            System.out.println("CE");
-            Window.isClearAllPressed(command);
-            clearButton.setActionCommand("clear");
-            clearButton.setText("clear");
-            repaint();
-        }
-
         Window.changeTextInTextField(command);
         Window.isEnterPressed(command);
         Window.isAnsPressed(command);
-        //Window.isClearAllPressed(getClearButtonText());
+        Window.isClearPressed(command);
+        Window.isClearAllPressed(command);
     }
 }

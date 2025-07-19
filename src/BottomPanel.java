@@ -1,12 +1,12 @@
-import CustomComponents.GradientButton;
+import CustomButtonDesign.GradientButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.Arrays;
 
 public class BottomPanel extends JPanel implements ActionListener{
-    String[] buttonsArr =
+    String[] buttonsStringArr =
             {"π","1","2","3","+",//"clear",
             "%", "4","5","6","-",//"<--",
             "|a|","7","8","9","x",//" ",
@@ -14,9 +14,12 @@ public class BottomPanel extends JPanel implements ActionListener{
             "undo", "redo", "clear","<--","<--|"
             };
 
+    final int BUTTON_ARRAY_SIZE = buttonsStringArr.length;
+    JButton[] buttonsArr = new JButton[BUTTON_ARRAY_SIZE];
+
     public void createButtons(){
-        for (String s : buttonsArr) {
-            String fontColor = "#217c7d";//"#59a6c0";
+        for (String s : buttonsStringArr) {
+            String fontColor = "#217c7d"; //"#59a6c0";
             String colorGradient1 = "#31383d";
             String colorGradient2 = "#121317";
             String colorHover1 = "#4b5359";
@@ -25,7 +28,8 @@ public class BottomPanel extends JPanel implements ActionListener{
             String colorPressed2 = "#43454c";
 
             if(s.equals("+") || s.equals("-") || s.equals("x") || s.equals("/") ||
-                s.equals("undo") || s.equals("redo") || s.equals("clear") || s.equals("<--")){
+                s.equals("undo") || s.equals("redo") || s.equals("clear") || s.equals("<--") ||
+                s.equals("CE")){
                 fontColor = "#b55968";
             }
             if(s.equals("<--|") || s.equals("ans")){
@@ -45,8 +49,36 @@ public class BottomPanel extends JPanel implements ActionListener{
                     colorHover1, colorHover2,
                     colorPressed1, colorPressed2);
 
-            button.setActionCommand(s);
+            Arrays.fill(buttonsArr, button);
+
+//            if(s.equals("clear")){
+//                button.addActionListener(e -> {
+//                    String current = button.getText();
+//                    if(current.equals("clear") && Window.topPanel.textFieldIsEmpty()){
+//                        button.setText("CE");
+//                        button.setActionCommand("CE");
+//                    }
+//                    else{
+//                        button.setText("clear");
+//                        button.setActionCommand("clear");
+//                    }
+//                });
+//            }
+            if(s.equals("clear")){
+                button.addActionListener(e -> {
+                    if(changeClearButton()){
+                        button.setText("CE");
+                        button.setActionCommand("CE");
+                    }
+                    else{
+                        button.setText("clear");
+                        button.setActionCommand("clear");
+                    }
+                });
+            }
+
             button.addActionListener(this);
+            button.setActionCommand(s);
             this.add(button);
         }
     }
@@ -59,6 +91,17 @@ public class BottomPanel extends JPanel implements ActionListener{
         createButtons();
     }
 
+    public boolean changeClearButton(){
+        if(clearButton.equals("clear") && Window.topPanel.textFieldIsEmpty()){
+            button.setText("CE");
+            button.setActionCommand("CE");
+        }
+        else{
+            button.setText("clear");
+            button.setActionCommand("clear");
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -67,5 +110,6 @@ public class BottomPanel extends JPanel implements ActionListener{
         Window.isEnterPressed(command);
         Window.isAnsPressed(command);
         Window.isClearPressed(command);
+        Window.isClearAllPressed(command);
     }
 }

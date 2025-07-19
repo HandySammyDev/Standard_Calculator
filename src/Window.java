@@ -28,7 +28,7 @@ public class Window extends JFrame {
 
     public static void changeTextInTextField(String command){
         JTextField activeTextField = topPanel.getActiveTextField();
-        if(command.equals("<--|") || command.equals("ans")){
+        if(command.equals("<--|") || command.equals("ans") || command.equals("CE")){
             command = "";
         }
         if(activeTextField!=null){
@@ -53,6 +53,14 @@ public class Window extends JFrame {
     public static void isClearPressed(String command){
         if(command.equals("clear")){
             topPanel.clearTextField();
+            System.out.println("clear");
+        }
+    }
+
+    public static void isClearAllPressed(String command){
+        if(command.equals("CE")){
+            topPanel.clearAllTextFields();
+            topPanel.createPanels();
         }
     }
 }

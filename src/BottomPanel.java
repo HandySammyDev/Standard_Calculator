@@ -3,7 +3,6 @@ import CustomButtonDesign.GradientButton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 public class BottomPanel extends JPanel implements ActionListener{
     String[] buttonsStringArr =
@@ -13,9 +12,6 @@ public class BottomPanel extends JPanel implements ActionListener{
             "(", "0", ".","ans","/",//"<--|"
             "undo", "redo", "clear","<--","<--|"
             };
-
-    final int BUTTON_ARRAY_SIZE = buttonsStringArr.length;
-    JButton[] buttonsArr = new JButton[BUTTON_ARRAY_SIZE];
 
     public void createButtons(){
         for (String s : buttonsStringArr) {
@@ -49,28 +45,14 @@ public class BottomPanel extends JPanel implements ActionListener{
                     colorHover1, colorHover2,
                     colorPressed1, colorPressed2);
 
-            Arrays.fill(buttonsArr, button);
-
-//            if(s.equals("clear")){
-//                button.addActionListener(e -> {
-//                    String current = button.getText();
-//                    if(current.equals("clear") && Window.topPanel.textFieldIsEmpty()){
-//                        button.setText("CE");
-//                        button.setActionCommand("CE");
-//                    }
-//                    else{
-//                        button.setText("clear");
-//                        button.setActionCommand("clear");
-//                    }
-//                });
-//            }
             if(s.equals("clear")){
                 button.addActionListener(e -> {
-                    if(changeClearButton()){
+                    String current = button.getText();
+                    if(current.equals("clear") && Window.topPanel.testClear()){
                         button.setText("CE");
                         button.setActionCommand("CE");
                     }
-                    else{
+                    else if(Window.topPanel.testClear()){
                         button.setText("clear");
                         button.setActionCommand("clear");
                     }
@@ -89,17 +71,6 @@ public class BottomPanel extends JPanel implements ActionListener{
         this.setLayout(new GridLayout(5,5,hGap,vGap));
         this.setBackground(Color.decode("#1d2226"));
         createButtons();
-    }
-
-    public boolean changeClearButton(){
-        if(clearButton.equals("clear") && Window.topPanel.textFieldIsEmpty()){
-            button.setText("CE");
-            button.setActionCommand("CE");
-        }
-        else{
-            button.setText("clear");
-            button.setActionCommand("clear");
-        }
     }
 
     @Override

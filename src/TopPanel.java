@@ -29,11 +29,14 @@ public class TopPanel extends JPanel {
     public JTextField getActiveTextField(){
         return activeField;
     }
+    public void setActiveTextField(JTextField textField){
+        this.activeField = textField;
+    }
     public String getTextInTextField(){
-        return activeField.getText();
+        return getActiveTextField().getText();
     }
     public void setTextField(String command){
-        activeField.setText(activeField.getText() + command);
+        getActiveTextField().setText(getActiveTextField().getText() + command);
     }
     public String getAns(){
         return ans;
@@ -66,13 +69,13 @@ public class TopPanel extends JPanel {
         if(mixedDataLinkedList.isEmpty()){
             panelBorderSouth.add(panel);
             mixedDataLinkedList.add(new MixedData(panel, textField, label));
-            activeField = mixedDataLinkedList.getFirst().getTextField();
-            highlightActiveTextField(activeField);
+            setActiveTextField(mixedDataLinkedList.getFirst().getTextField());
+            highlightActiveTextField(getActiveTextField());
         }
         else{
             expandBorder();
-            mixedDataLinkedList = modifiedPanelList(mixedDataLinkedList, activeField, panel, textField, label);
-            activeField = mixedDataLinkedList.get(indexOfNextTextField +1).getTextField();
+            mixedDataLinkedList = modifiedPanelList(mixedDataLinkedList, getActiveTextField(), panel, textField, label);
+            setActiveTextField(mixedDataLinkedList.get(indexOfNextTextField +1).getTextField());
             clearHighlightActiveTextField();
             highlightActiveTextField(activeField);
         }
@@ -80,9 +83,12 @@ public class TopPanel extends JPanel {
         textField.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                activeField = textField;
+                setActiveTextField(textField);
                 clearHighlightActiveTextField();
-                highlightActiveTextField(activeField);
+                highlightActiveTextField(getActiveTextField());
+
+                isTestClear = testClear();
+                printTestClear();
             }
         });
 
@@ -122,7 +128,7 @@ public class TopPanel extends JPanel {
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                activeField = (JTextField) e.getSource();
+                setActiveTextField((JTextField) e.getSource());
             }
         });
 
@@ -161,10 +167,10 @@ public class TopPanel extends JPanel {
     public void removeTextField(){
         shrinkBorder();
         for(int i = 0; i< mixedDataLinkedList.size(); i++){
-            if(activeField == mixedDataLinkedList.get(i).getTextField()){
+            if(getActiveTextField() == mixedDataLinkedList.get(i).getTextField()){
                 mixedDataLinkedList.remove(i);
-                activeField = mixedDataLinkedList.get(i-1).getTextField();
-                highlightActiveTextField(activeField);
+                setActiveTextField(mixedDataLinkedList.get(i-1).getTextField());
+                highlightActiveTextField(getActiveTextField());
             }
         }
         changeTextFields();
@@ -243,20 +249,33 @@ public class TopPanel extends JPanel {
         repaint();
         revalidate();
     }
-    public boolean textFieldIsEmpty(){
-        //CE:
-        //  if activeTextField is empty
-
-        //Clear:
-        //  if activeField is NOT empty
-//        if(activeField.getText().isEmpty()){
-//            return true;
+    private boolean isTestClear = false;
+//    public void resetTextClear(){
+//        if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
+//            isTestClear = true; //clear
 //        }
-//        else if(!activeField.getText().isEmpty()){
-//            return false;
+//        else if(getActiveTextField().getText().isEmpty()){
+//            isTestClear = false; //CE
 //        }
-        return !activeField.getText().isEmpty() || !mixedDataLinkedList.getFirst().getTextField().getText().isEmpty();
-        //return true;
+//    }
+    public boolean testClear(){
+        if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
+            return true; //clear
+        }
+        else if(getActiveTextField().getText().isEmpty()){
+            return false; //CE
+        }
+        return false;
+    }
+    public void printTestClear(){
+        String clearButton = "clear";
+        String CEButton = "CE";
+        if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
+            System.out.println(clearButton);
+        }
+        else if(getActiveTextField().getText().isEmpty()){
+            System.out.println(CEButton);
+        }
     }
 
     private int mixedDataTemp;

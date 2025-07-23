@@ -74,5 +74,7 @@ public class BottomPanel extends JPanel implements ActionListener{
         Window.isAnsPressed(command);
         Window.isClearPressed(command);
         Window.isClearAllPressed(command);
+        Window.undoPressed(command);
+        Window.redoPressed(command);
     }
 }

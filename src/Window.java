@@ -28,7 +28,8 @@ public class Window extends JFrame {
 
     public static void changeTextInTextField(String command){
         JTextField activeTextField = topPanel.getActiveTextField();
-        if(command.equals("<--|") || command.equals("ans") || command.equals("CE")){
+        if(command.equals("<--|") || command.equals("ans") || command.equals("CE") ||
+        command.equals("undo") || command.equals("redo")){
             command = "";
         }
         if(activeTextField!=null){
@@ -61,6 +62,18 @@ public class Window extends JFrame {
         if(command.equals("CE")){
             topPanel.clearAllTextFields();
             topPanel.createPanels();
+        }
+    }
+
+    public static void undoPressed(String command){
+        if(command.equals("undo")){
+            System.out.println("Undo");
+        }
+    }
+
+    public static void redoPressed(String command){
+        if(command.equals("redo")){
+            System.out.println("Redo");
         }
     }
 }

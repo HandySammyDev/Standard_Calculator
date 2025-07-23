@@ -21,7 +21,6 @@ public class TopPanel extends JPanel {
     private int sizeableLabelWIDTH = LABEL_WIDTH;
     private JPanel panelBorderSouth = new JPanel();
     private JTextField activeField = null;
-    private int textFieldIndex;
     private int activeCaret = 0;
     private LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
     private String ans = null;
@@ -286,6 +285,12 @@ public class TopPanel extends JPanel {
         catch (IndexOutOfBoundsException e){
             System.out.println("Outta bounds");
         }
+    }
+
+
+    public void saveTextFieldData(){
+        String[] arr = new String[10];
+
     }
 
     public void expandBorder(){

@@ -109,16 +109,19 @@ public class TopPanel extends JPanel {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 changeLabel();
+                toggleClearButton();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 changeLabel();
+                toggleClearButton();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 changeLabel();
+                toggleClearButton();
             }
         });
 
@@ -253,13 +256,16 @@ public class TopPanel extends JPanel {
     public void toggleClearButton(){
         String clearButton = "clear";
         String CEButton = "CE";
+        int index = Window.bottomPanel.indexOfClear;
         if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
-            Window.bottomPanel.buttonLists[Window.bottomPanel.indexOfClear].setText(clearButton);
-            System.out.println(clearButton);
+            Window.bottomPanel.buttonLists[index].setText(clearButton);
+            Window.bottomPanel.buttonLists[index].setActionCommand(clearButton);
+            //System.out.println(clearButton);
         }
         else if(getActiveTextField().getText().isEmpty()){
-            Window.bottomPanel.buttonLists[Window.bottomPanel.indexOfClear].setText(CEButton);
-            System.out.println(CEButton);
+            Window.bottomPanel.buttonLists[index].setText(CEButton);
+            Window.bottomPanel.buttonLists[index].setActionCommand(CEButton);
+            //System.out.println(CEButton);
         }
     }
 
@@ -268,6 +274,7 @@ public class TopPanel extends JPanel {
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(mixedDataLinkedList.get(i).getTextField()==activeTextField){
                 mixedDataLinkedList.get(i).getPanel().setBorder(new LineBorder(Color.decode("#1e8d8f"), 4));
+                toggleClearButton();
                 mixedDataTemp = i;
             }
         }

@@ -87,8 +87,7 @@ public class TopPanel extends JPanel {
                 clearHighlightActiveTextField();
                 highlightActiveTextField(getActiveTextField());
 
-                isTestClear = testClear();
-                printTestClear();
+                toggleClearButton();
             }
         });
 
@@ -129,6 +128,7 @@ public class TopPanel extends JPanel {
             @Override
             public void focusGained(FocusEvent e) {
                 setActiveTextField((JTextField) e.getSource());
+                toggleClearButton();
             }
         });
 
@@ -249,31 +249,16 @@ public class TopPanel extends JPanel {
         repaint();
         revalidate();
     }
-    private boolean isTestClear = false;
-//    public void resetTextClear(){
-//        if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
-//            isTestClear = true; //clear
-//        }
-//        else if(getActiveTextField().getText().isEmpty()){
-//            isTestClear = false; //CE
-//        }
-//    }
-    public boolean testClear(){
-        if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
-            return true; //clear
-        }
-        else if(getActiveTextField().getText().isEmpty()){
-            return false; //CE
-        }
-        return false;
-    }
-    public void printTestClear(){
+
+    public void toggleClearButton(){
         String clearButton = "clear";
         String CEButton = "CE";
         if(!getActiveTextField().getText().isEmpty() || mixedDataLinkedList.size()==1){
+            Window.bottomPanel.buttonLists[Window.bottomPanel.indexOfClear].setText(clearButton);
             System.out.println(clearButton);
         }
         else if(getActiveTextField().getText().isEmpty()){
+            Window.bottomPanel.buttonLists[Window.bottomPanel.indexOfClear].setText(CEButton);
             System.out.println(CEButton);
         }
     }

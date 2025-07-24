@@ -54,7 +54,6 @@ public class Window extends JFrame {
     public static void isClearPressed(String command){
         if(command.equals("clear")){
             topPanel.clearTextField();
-            System.out.println("clear");
         }
     }
 

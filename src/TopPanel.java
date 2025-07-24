@@ -7,10 +7,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class TopPanel extends JPanel {
     private final int WIDTH = 500;
@@ -274,6 +272,10 @@ public class TopPanel extends JPanel {
             if(mixedDataLinkedList.get(i).getTextField()==activeTextField){
                 mixedDataLinkedList.get(i).getPanel().setBorder(new LineBorder(Color.decode("#1e8d8f"), 4));
                 toggleClearButton();
+
+                setIndexOfChangedTextField(i);
+                saveTextFieldData();
+
                 mixedDataTemp = i;
             }
         }
@@ -287,10 +289,23 @@ public class TopPanel extends JPanel {
         }
     }
 
-
+    private int indexOfChangedTextField;
+    private int getIndexOfChangedTextField(){
+        return indexOfChangedTextField;
+    }
+    private void setIndexOfChangedTextField(int index){
+        this.indexOfChangedTextField = index;
+    }
+    //if we clicked Enter
     public void saveTextFieldData(){
-        String[] arr = new String[10];
+        Stack<LinkedList> stack = new Stack<>();
 
+        //We need the index of the curr CHANGED jtextfield
+        stack.push(mixedDataLinkedList);
+
+        // Getting slices of text
+        // Creating textfields
+        // deleting textfields
     }
 
     public void expandBorder(){

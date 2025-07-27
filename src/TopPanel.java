@@ -167,6 +167,12 @@ public class TopPanel extends JPanel {
     public void removeTextField(){
         shrinkBorder();
         for(int i = 0; i< mixedDataLinkedList.size(); i++){
+//            if(i == 0){
+//                mixedDataLinkedList.remove(i);
+//                setActiveTextField(mixedDataLinkedList.get(i).getTextField());
+//                highlightActiveTextField(getActiveTextField());
+//                return;
+//            }
             if(getActiveTextField() == mixedDataLinkedList.get(i).getTextField()){
                 mixedDataLinkedList.remove(i);
                 setActiveTextField(mixedDataLinkedList.get(i-1).getTextField());

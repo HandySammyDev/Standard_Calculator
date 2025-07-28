@@ -22,6 +22,7 @@ public class TopPanel extends JPanel {
     private int activeCaret = 0;
     private LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
     private String ans = null;
+    private int positionOfCaret;
 
     public JTextField getActiveTextField(){
         return activeField;
@@ -32,11 +33,37 @@ public class TopPanel extends JPanel {
     public String getTextInTextField(){
         return getActiveTextField().getText();
     }
-    public void setTextField(String command){
-        getActiveTextField().setText(getActiveTextField().getText() + command);
+    public void setTextInTextField(String command){
+        String currentText = getActiveTextField().getText();
+        getActiveTextField().setText(currentText + command);
+
+        System.out.println(currentText + command);
+//        if(getPositionOfCaret()==0){
+//            newText = command.concat(currentText);
+//            //getActiveTextField().setText(newText);
+//            setPositionOfCaret(getPositionOfCaret()+1);
+//            System.out.println(newText);
+//        }
+//        else if(getPositionOfCaret()==currentText.length()){
+//            newText = currentText.concat(command);
+//            //getActiveTextField().setText(newText);
+//            System.out.println(newText);
+//        }
+//        else{
+//            newText = currentText.substring(0,getPositionOfCaret()) + command;
+//            //getActiveTextField().setText(newText);
+//            setPositionOfCaret(getPositionOfCaret()+1);
+//            System.out.println(newText);
+//        }
     }
     public String getAns(){
         return ans;
+    }
+    public void setPositionOfCaret(int pos){
+        this.positionOfCaret = pos;
+    }
+    public int getPositionOfCaret(){
+        return positionOfCaret;
     }
 
     public void createPanels(){
@@ -122,7 +149,15 @@ public class TopPanel extends JPanel {
             }
         });
 
-        textField.addCaretListener(e -> activeCaret = e.getDot());
+        textField.addCaretListener(e -> {
+            activeCaret = e.getDot(); //fix the backspace instant delete
+
+            int pos = textField.getCaretPosition();
+            System.out.println(pos);
+            setPositionOfCaret(pos);
+
+            //textField.requestFocusInWindow();
+        });
 
         textField.addFocusListener(new FocusAdapter() {
             @Override

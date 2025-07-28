@@ -33,7 +33,7 @@ public class Window extends JFrame {
             command = "";
         }
         if(activeTextField!=null){
-            topPanel.setTextField(command);
+            topPanel.setTextInTextField(command);
         }
     }
 

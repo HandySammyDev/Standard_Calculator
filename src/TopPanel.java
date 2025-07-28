@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -14,7 +15,6 @@ public class TopPanel extends JPanel {
     private final int WIDTH = 500;
     private final int HEIGHT = 70;
     private int sizeableHEIGHT = HEIGHT;
-    private final int TEXT_FIELD_WIDTH = WIDTH;
     private final int LABEL_WIDTH = 180;
     private int sizeableLabelWIDTH = LABEL_WIDTH;
     private JPanel panelBorderSouth = new JPanel();
@@ -35,26 +35,16 @@ public class TopPanel extends JPanel {
     }
     public void setTextInTextField(String command){
         String currentText = getActiveTextField().getText();
-        getActiveTextField().setText(currentText + command);
+        String newText = currentText.substring(0,getPositionOfCaret()) + command + currentText.substring(getPositionOfCaret());
 
-        System.out.println(currentText + command);
-//        if(getPositionOfCaret()==0){
-//            newText = command.concat(currentText);
-//            //getActiveTextField().setText(newText);
-//            setPositionOfCaret(getPositionOfCaret()+1);
-//            System.out.println(newText);
-//        }
-//        else if(getPositionOfCaret()==currentText.length()){
-//            newText = currentText.concat(command);
-//            //getActiveTextField().setText(newText);
-//            System.out.println(newText);
-//        }
-//        else{
-//            newText = currentText.substring(0,getPositionOfCaret()) + command;
-//            //getActiveTextField().setText(newText);
-//            setPositionOfCaret(getPositionOfCaret()+1);
-//            System.out.println(newText);
-//        }
+        try {
+            getActiveTextField().getDocument().insertString(getPositionOfCaret(), command, null);
+            setPositionOfCaret(getPositionOfCaret() + 1);
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
+        }
+
+        System.out.println("Output: " + newText);
     }
     public String getAns(){
         return ans;
@@ -75,7 +65,7 @@ public class TopPanel extends JPanel {
         JTextField textField = new JTextField();
         JLabel label = new JLabel();
 
-        textField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, HEIGHT));
+        textField.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         textField.setFont(new Font(null, Font.PLAIN, 25));
         textField.setBackground(Color.decode("#f0edec"));
         textField.setBorder(null);
@@ -107,6 +97,9 @@ public class TopPanel extends JPanel {
         textField.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                int pos = textField.getCaretPosition();
+                setPositionOfCaret(pos);
+
                 setActiveTextField(textField);
                 clearHighlightActiveTextField();
                 highlightActiveTextField(getActiveTextField());
@@ -151,12 +144,7 @@ public class TopPanel extends JPanel {
 
         textField.addCaretListener(e -> {
             activeCaret = e.getDot(); //fix the backspace instant delete
-
-            int pos = textField.getCaretPosition();
-            System.out.println(pos);
-            setPositionOfCaret(pos);
-
-            //textField.requestFocusInWindow();
+            System.out.println("Position of caret: " + getPositionOfCaret());
         });
 
         textField.addFocusListener(new FocusAdapter() {

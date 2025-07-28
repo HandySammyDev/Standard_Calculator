@@ -53,6 +53,8 @@ public class BottomPanel extends JPanel implements ActionListener{
 
             button.addActionListener(this);
             button.setActionCommand(buttonText);
+            button.setFocusable(false);
+
             this.add(button);
         }
     }

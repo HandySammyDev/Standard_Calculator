@@ -23,6 +23,7 @@ public class TopPanel extends JPanel {
     private LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
     private String ans = null;
     private int positionOfCaret;
+    private int indexOfActiveField;
 
     public JTextField getActiveTextField(){
         return activeField;
@@ -35,7 +36,10 @@ public class TopPanel extends JPanel {
     }
     public void setTextInTextField(String command){
         String currentText = getActiveTextField().getText();
-        String newText = currentText.substring(0,getPositionOfCaret()) + command + currentText.substring(getPositionOfCaret());
+        String newText = "";
+        if(!currentText.isEmpty()){
+            newText = currentText.substring(0,getPositionOfCaret()) + command + currentText.substring(getPositionOfCaret());
+        }
 
         try {
             getActiveTextField().getDocument().insertString(getPositionOfCaret(), command, null);
@@ -115,6 +119,8 @@ public class TopPanel extends JPanel {
                     createPanels();
                     repaint();
                     revalidate();
+
+                    setPositionOfCaret(0);
                 }
                 if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && mixedDataLinkedList.size()>1){
                     removeTextField();
@@ -165,6 +171,20 @@ public class TopPanel extends JPanel {
         }
         repaint();
         revalidate();
+    }
+
+    //Call this before anything
+    public void setIndexOfActiveField(){
+        for(int i=0; i<mixedDataLinkedList.size(); i++){
+            if(mixedDataLinkedList.get(i).getTextField() == getActiveTextField()){
+                this.indexOfActiveField = i;
+            }
+        }
+        this.indexOfActiveField = 0;
+    }
+
+    public int getIndexOfActiveField(){
+        return indexOfActiveField;
     }
 
     private int indexOfNextTextField;

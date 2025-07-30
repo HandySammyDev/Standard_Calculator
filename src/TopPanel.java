@@ -340,6 +340,18 @@ public class TopPanel extends JPanel {
         }
     }
 
+    public void backspaceDelete(){
+        String currentText = getActiveTextField().getText();
+        String newText = "";
+
+        //Needs to actually delete
+        if(!currentText.isEmpty()){
+            newText = currentText.substring(0, getPositionOfCaret()) + currentText.substring(getPositionOfCaret() + 1);
+        }
+
+        getActiveTextField().setText(newText);
+    }
+
     private int indexOfChangedTextField;
     private int getIndexOfChangedTextField(){
         return indexOfChangedTextField;

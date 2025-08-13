@@ -14,54 +14,22 @@ import java.util.Timer;
 public class TopPanel extends JPanel {
     private final int WIDTH = 500;
     private final int HEIGHT = 70;
-    private int sizeableHEIGHT = HEIGHT;
     private final int LABEL_WIDTH = 180;
+
+    private int sizeableHEIGHT = HEIGHT;
     private int sizeableLabelWIDTH = LABEL_WIDTH;
+
     private JPanel panelBorderSouth = new JPanel();
     private JTextField activeField = null;
-    private int activeCaret = 0;
+
     private LinkedList<MixedData> mixedDataLinkedList = new LinkedList<>();
+
     private String ans = null;
     private int positionOfCaret;
     private int indexOfActiveField;
 
-    public JTextField getActiveTextField(){
-        return activeField;
-    }
-    public void setActiveTextField(JTextField textField){
-        this.activeField = textField;
-    }
-    public String getTextInTextField(){
-        return getActiveTextField().getText();
-    }
-    public void setTextInTextField(String command){
-        String currentText = getActiveTextField().getText();
-        String newText = "";
-        if(!currentText.isEmpty()){
-            newText = currentText.substring(0,getPositionOfCaret()) + command + currentText.substring(getPositionOfCaret());
-        }
-
-        try {
-            getActiveTextField().getDocument().insertString(getPositionOfCaret(), command, null);
-            setPositionOfCaret(getPositionOfCaret() + 1);
-        } catch (BadLocationException ex) {
-            ex.printStackTrace();
-        }
-
-        System.out.println("Output: " + newText);
-    }
-    public String getAns(){
-        return ans;
-    }
-    public void setPositionOfCaret(int pos){
-        this.positionOfCaret = pos;
-    }
-    public int getPositionOfCaret(){
-        return positionOfCaret;
-    }
-
     public void createPanels(){
-        if(activeCaret==0 && !mixedDataLinkedList.isEmpty()){
+        if(getPositionOfCaret()==0 && !mixedDataLinkedList.isEmpty()){
             return;
         }
 
@@ -122,7 +90,7 @@ public class TopPanel extends JPanel {
 
                     setPositionOfCaret(0);
                 }
-                if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && activeCaret==0 && mixedDataLinkedList.size()>1){
+                if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE && getPositionOfCaret()==0 && mixedDataLinkedList.size()>1){
                     removeTextField();
                 }
             }
@@ -149,7 +117,7 @@ public class TopPanel extends JPanel {
         });
 
         textField.addCaretListener(e -> {
-            activeCaret = e.getDot(); //fix the backspace instant delete
+            setPositionOfCaret(e.getDot()); //fix the backspace instant delete
             System.out.println("Position of caret: " + getPositionOfCaret());
         });
 
@@ -162,7 +130,7 @@ public class TopPanel extends JPanel {
         });
 
         changeTextFields();
-        activeCaret = 0;
+        setPositionOfCaret(0);
     }
 
     public void changeTextFields(){
@@ -171,20 +139,6 @@ public class TopPanel extends JPanel {
         }
         repaint();
         revalidate();
-    }
-
-    //Call this before anything
-    public void setIndexOfActiveField(){
-        for(int i=0; i<mixedDataLinkedList.size(); i++){
-            if(mixedDataLinkedList.get(i).getTextField() == getActiveTextField()){
-                this.indexOfActiveField = i;
-            }
-        }
-        this.indexOfActiveField = 0;
-    }
-
-    public int getIndexOfActiveField(){
-        return indexOfActiveField;
     }
 
     private int indexOfNextTextField;
@@ -327,7 +281,7 @@ public class TopPanel extends JPanel {
                 setIndexOfChangedTextField(i);
                 saveTextFieldData();
 
-                mixedDataTemp = i;
+                mixedDataTemp = i; //we need this
             }
         }
     }
@@ -341,15 +295,7 @@ public class TopPanel extends JPanel {
     }
 
     public void backspaceDelete(){
-        String currentText = getActiveTextField().getText();
-        String newText = "";
 
-        //Needs to actually delete
-        if(!currentText.isEmpty()){
-            newText = currentText.substring(0, getPositionOfCaret()) + currentText.substring(getPositionOfCaret() + 1);
-        }
-
-        getActiveTextField().setText(newText);
     }
 
     private int indexOfChangedTextField;
@@ -393,5 +339,53 @@ public class TopPanel extends JPanel {
         panelBorderSouth.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 
         createPanels();
+    }
+
+    public JTextField getActiveTextField(){
+        return activeField;
+    }
+    public void setActiveTextField(JTextField textField){
+        this.activeField = textField;
+    }
+    public String getTextInTextField(){
+        return getActiveTextField().getText();
+    }
+    public void setTextInTextField(String command){
+        String currentText = getActiveTextField().getText();
+        String newText = "";
+        if(!currentText.isEmpty()){
+            newText = currentText.substring(0,getPositionOfCaret()) + command + currentText.substring(getPositionOfCaret());
+        }
+
+        try {
+            getActiveTextField().getDocument().insertString(getPositionOfCaret(), command, null);
+            setPositionOfCaret(getPositionOfCaret() + 1);
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
+        }
+
+        System.out.println("Output: " + newText);
+    }
+    public String getAns(){
+        return ans;
+    }
+    public void setPositionOfCaret(int pos){
+        this.positionOfCaret = pos;
+    }
+    public int getPositionOfCaret(){
+        return positionOfCaret;
+    }
+
+    //Call this before anything
+    public void setIndexOfActiveField(){
+        for(int i=0; i<mixedDataLinkedList.size(); i++){
+            if(mixedDataLinkedList.get(i).getTextField() == getActiveTextField()){
+                this.indexOfActiveField = i;
+            }
+        }
+        this.indexOfActiveField = 0;
+    }
+    public int getIndexOfActiveField(){
+        return indexOfActiveField;
     }
 }

@@ -376,7 +376,7 @@ public class TopPanel extends JPanel {
         return positionOfCaret;
     }
 
-    //Call this before anything
+    //Call this before the highlight method
     public void setIndexOfActiveField(){
         for(int i=0; i<mixedDataLinkedList.size(); i++){
             if(mixedDataLinkedList.get(i).getTextField() == getActiveTextField()){

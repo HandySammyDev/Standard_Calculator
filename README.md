@@ -1,10 +1,10 @@
-The Standard Calculator
+# Java Simple Calculator app like [desmos.com](https://www.desmos.com/scientific)
 
-My current code is a working in progress.
-Feel free to reference and use it.
+## A semi-functional Standard Calculator written in Java to replicate visual functions from Desmos
 
-Working on:
-- Basic arithmetic
-- Displaying numbers and answers
-- UI
-- History
+This project was for learning purposes and contains visual elements inspired by Desmos Calculator.
+This Calculator does the following:
+
+* Basic arthemitic
+* Creates TextFields
+* Custom Buttons

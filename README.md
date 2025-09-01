@@ -13,4 +13,4 @@ This Calculator does the following:
 * Custom Buttons
 
 
-![Demo]()
+![Demo](assets/gif1.gif)
